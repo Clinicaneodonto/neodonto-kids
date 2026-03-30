@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEODONTO – Painel Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --tiffany: #0abfbc;
+      --tiffany-light: #e0fafa;
+      --gold: #c9a84c;
+      --gold-light: #fdf4e0;
+      --azul: #1a3a5c;
+      --branco: #ffffff;
+      --bg: #f4f7fb;
+      --cinza: #6b7280;
+      --borda: #e2e8f0;
+      --erro: #ef4444;
+      --sucesso: #10b981;
+      --laranja: #f97316;
+      --rosa: #f472b6;
+      --roxo: #a78bfa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    /* ===== LOGIN ===== */
+    #loginWrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--azul);
+    }
+
+    .login-card {
+      background: var(--branco);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--azul);
+      letter-spacing: 2px;
+    }
+
+    .login-logo p {
+      font-size: 0.78rem;
+      color: var(--cinza);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .login-field { margin-bottom: 16px; }
+
+    .login-field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .login-field input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--borda);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: 'Nunito', sans-serif;
+      color: var(--azul);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .login-field input:focus { border-color: var(--tiffany); }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--tiffany);
+      border: none;
+      border-radius: 12px;
+      color: var(--branco);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover { background: #089e9b; }
+
+    #loginErr {
+      color: var(--erro);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* ===== DASHBOARD ===== */
+    #dashWrap { display: none; }
+
+    .topbar {
+      background: var(--azul);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--branco);
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+    }
+
+    .topbar-logo span { color: var(--tiffany); }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .badge-admin {
+      background: var(--tiffany);
+      color: var(--branco);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
+
+    .btn-logout {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--branco);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(255,255,255,0.2); }
+
+    .dash-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      border-left: 4px solid var(--tiffany);
+    }
+
+    .stat-card.gold { border-left-color: var(--gold); }
+    .stat-card.rosa { border-left-color: var(--rosa); }
+    .stat-card.roxo { border-left-color: var(--roxo); }
+
+    .stat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .stat-val { font-size: 2rem; font-weight: 900; color: var(--azul); line-height: 1; }
+    .stat-label { font-size: 0.78rem; color: var(--cinza); font-weight: 700; margin-top: 4px; }
+
+    /* TABELA */
+    .table-card {
+      background: var(--branco);
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--borda);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--azul);
+    }
+
+    .table-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      padding: 8px 14px;
+      border: 2px solid var(--borda);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-family: 'Nunito', sans-serif;
+      color: var(--azul);
+      outline: none;
+      width: 220px;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--tiffany); }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 2px solid var(--borda);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: 'Nunito', sans-serif;
+      color: var(--azul);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-refresh {
+      padding: 8px 16px;
+      background: var(--tiffany-light);
+      border: 2px solid var(--tiffany);
+      border-radius: 10px;
+      color: var(--tiffany);
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-refresh:hover { background: var(--tiffany); color: var(--branco); }
+
+    .badge-count {
+      background: var(--azul);
+      color: var(--branco);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: #f8fafc;
+      border-bottom: 2px solid var(--borda);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--cinza);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--borda);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    tbody tr:hover { background: #f0fdfd; }
+    tbody tr:last-child { border-bottom: none; }
+
+    td {
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      color: var(--azul);
+      font-weight: 600;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--tiffany);
+      background: var(--tiffany-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .td-nome { display: flex; align-items: center; gap: 10px; }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+    .tag-kids { background: #fce7f3; color: #9d174d; }
+    .tag-adulto { background: var(--tiffany-light); color: #0e7490; }
+    .tag-alergia { background: #fee2e2; color: #991b1b; }
+    .tag-ok { background: #d1fae5; color: #065f46; }
+
+    .loading {
+      padding: 60px;
+      text-align: center;
+      color: var(--cinza);
+      font-weight: 700;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--borda);
+      border-top-color: var(--tiffany);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== MODAL ===== */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-bg.open { display: flex; }
+
+    .modal {
+      background: var(--branco);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      background: var(--azul);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-header-left { display: flex; align-items: center; gap: 14px; }
+
+    .modal-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid var(--tiffany);
+      background: var(--tiffany-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-nome { color: var(--branco); font-size: 1.1rem; font-weight: 900; }
+    .modal-sub { color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 2px; }
+
+    .modal-actions { display: flex; gap: 8px; }
+
+    .btn-action {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-print {
+      background: rgba(255,255,255,0.15);
+      color: var(--branco);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-print:hover { background: rgba(255,255,255,0.25); }
+
+    .btn-pdf {
+      background: var(--gold);
+      color: var(--azul);
+    }
+
+    .btn-pdf:hover { background: #b8952e; }
+
+    .btn-fechar {
+      background: rgba(255,255,255,0.1);
+      color: var(--branco);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 12px;
+    }
+
+    .modal-body { padding: 28px; overflow-y: auto; max-height: 70vh; }
+
+    .m-section {
+      margin-bottom: 22px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .m-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .m-section-title {
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: var(--tiffany);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .m-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .m-item label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--cinza);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .m-item span {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--azul);
+    }
+
+    .m-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
+    .m-tag {
+      background: var(--tiffany-light);
+      color: var(--azul);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid var(--tiffany);
+    }
+
+    .m-tag.danger { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+    .m-tag.warn   { background: #fff7ed; color: #9a3412; border-color: #fdba74; }
+    .m-tag.fun    { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+    .m-tag.gold   { background: var(--gold-light); color: #92400e; border-color: #fcd34d; }
+
+    .alert-box {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #991b1b;
+      margin-bottom: 12px;
+    }
+
+    /* PRINT */
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        position: fixed;
+        inset: 0;
+        padding: 20px;
+        background: white;
+      }
+      .no-print { display: none !important; }
+    }
+
+    #printArea { display: none; }
+
+    @media (max-width: 600px) {
+      .m-grid { grid-template-columns: 1fr; }
+      .modal-actions { flex-wrap: wrap; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      th:nth-child(3), td:nth-child(3),
+      th:nth-child(4), td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1><span style="color:var(--tiffany)">NEO</span>DONTO</h1>
+      <p>Painel Administrativo</p>
+    </div>
+    <div class="login-field">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" />
+    </div>
+    <div class="login-field">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div id="loginErr"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashWrap">
+  <div class="topbar">
+    <div class="topbar-logo"><span>NEO</span>DONTO</div>
+    <div class="topbar-right">
+      <span class="badge-admin">ADMIN</span>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-val" id="statTotal">—</div>
+        <div class="stat-label">Total de fichas</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">🧒</div>
+        <div class="stat-val" id="statKids">—</div>
+        <div class="stat-label">Fichas infantis</div>
+      </div>
+      <div class="stat-card rosa">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-val" id="statAlergia">—</div>
+        <div class="stat-label">Com alergias</div>
+      </div>
+      <div class="stat-card roxo">
+        <div class="stat-icon">📅</div>
+        <div class="stat-val" id="statHoje">—</div>
+        <div class="stat-label">Fichas hoje</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="table-title">Pacientes</div>
+          <span class="badge-count" id="countBadge">0</span>
+        </div>
+        <div class="table-controls">
+          <input class="search-input" id="searchInput" placeholder="🔍 Buscar por nome..." oninput="filtrar()" />
+          <select class="filter-select" id="filtroTipo" onchange="filtrar()">
+            <option value="">Todos</option>
+            <option value="infantil">🧒 Infantil</option>
+            <option value="adulto">🧑 Adulto</option>
+          </select>
+          <button class="btn-refresh" onclick="carregarDados()">↻ Atualizar</button>
+        </div>
+      </div>
+      <div id="tableArea">
+        <div class="loading"><div class="spinner"></div>Carregando fichas...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="fecharModalBg(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- PRINT AREA -->
+<div id="printArea"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, orderBy, query }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDUJjgEbHToezyzZAMWP5VR1IWHjRF6icM",
+    authDomain: "neodonto-808ea.firebaseapp.com",
+    projectId: "neodonto-808ea",
+    storageBucket: "neodonto-808ea.firebasestorage.app",
+    messagingSenderId: "602833895297",
+    appId: "1:602833895297:web:6744ea4b28739aced43280"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  let todosPacientes = [];
+  let pacienteAtual = null;
+
+  // ---- AUTH ----
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('dashWrap').style.display = 'block';
+      carregarDados();
+    } else {
+      document.getElementById('loginWrap').style.display = 'flex';
+      document.getElementById('dashWrap').style.display = 'none';
+    }
+  });
+
+  window.fazerLogin = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    const err   = document.getElementById('loginErr');
+    err.textContent = '';
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      err.textContent = 'E-mail ou senha incorretos.';
+    }
+  };
+
+  window.fazerLogout = async function() {
+    await signOut(auth);
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginWrap').style.display !== 'none') {
+      window.fazerLogin();
+    }
+    if (e.key === 'Escape') fecharModal();
+  });
+
+  // ---- DADOS ----
+  window.carregarDados = async function() {
+    document.getElementById('tableArea').innerHTML =
+      '<div class="loading"><div class="spinner"></div>Carregando fichas...</div>';
+    try {
+      const q = query(collection(db, 'anamneses'), orderBy('criadoEm', 'desc'));
+      const snap = await getDocs(q);
+      todosPacientes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      atualizarStats();
+      renderTabela(todosPacientes);
+    } catch(e) {
+      document.getElementById('tableArea').innerHTML =
+        '<div class="loading">Erro ao carregar dados. Verifique sua conexão.</div>';
+    }
+  };
+
+  function atualizarStats() {
+    const hoje = new Date().toDateString();
+    const kids = todosPacientes.filter(p => p.tipo === 'infantil').length;
+    const alerg = todosPacientes.filter(p => {
+      if (p.tipo === 'infantil') return p.saudeGeral?.alergiaMedicamento === 'Sim' || p.saudeGeral?.outrasAlergias;
+      return p.alergiaMedicamento === 'Sim' || p.outrasAlergias;
+    }).length;
+    const hojeCount = todosPacientes.filter(p => {
+      if (!p.criadoEm) return false;
+      return new Date(p.criadoEm.seconds * 1000).toDateString() === hoje;
+    }).length;
+
+    document.getElementById('statTotal').textContent   = todosPacientes.length;
+    document.getElementById('statKids').textContent    = kids;
+    document.getElementById('statAlergia').textContent = alerg;
+    document.getElementById('statHoje').textContent    = hojeCount;
+  }
+
+  function renderTabela(lista) {
+    document.getElementById('countBadge').textContent = lista.length;
+    if (!lista.length) {
+      document.getElementById('tableArea').innerHTML =
+        '<div class="loading">Nenhuma ficha encontrada.</div>';
+      return;
+    }
+
+    const rows = lista.map((p, i) => {
+      const isKids = p.tipo === 'infantil';
+      const nome = isKids ? (p.crianca?.nome || '—') : (p.nome || '—');
+      const telefone = isKids ? (p.responsavel?.whatsapp || '—') : (p.telefone || p.whatsapp || '—');
+      const temAlergia = isKids
+        ? (p.saudeGeral?.alergiaMedicamento === 'Sim' || p.saudeGeral?.outrasAlergias)
+        : (p.alergiaMedicamento === 'Sim' || p.outrasAlergias);
+      const foto = isKids ? p.foto : p.foto;
+      const data = p.criadoEm
+        ? new Date(p.criadoEm.seconds * 1000).toLocaleDateString('pt-BR')
+        : '—';
+
+      const avatarHtml = foto
+        ? `<div class="avatar"><img src="${foto}" alt="${nome}"/></div>`
+        : `<div class="avatar">${isKids ? '🧒' : '🧑'}</div>`;
+
+      return `<tr onclick="abrirModal(${i})">
+        <td><div class="td-nome">${avatarHtml}<span>${nome}</span></div></td>
+        <td><span class="tag ${isKids ? 'tag-kids' : 'tag-adulto'}">${isKids ? '🧒 Infantil' : '🧑 Adulto'}</span></td>
+        <td>${telefone}</td>
+        <td><span class="tag ${temAlergia ? 'tag-alergia' : 'tag-ok'}">${temAlergia ? '⚠️ Sim' : '✅ Não'}</span></td>
+        <td>${data}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableArea').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Paciente</th>
+          <th>Tipo</th>
+          <th>Contato</th>
+          <th>Alergia</th>
+          <th>Data</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  window.filtrar = function() {
+    const busca = document.getElementById('searchInput').value.toLowerCase();
+    const tipo  = document.getElementById('filtroTipo').value;
+    const lista = todosPacientes.filter(p => {
+      const isKids = p.tipo === 'infantil';
+      const nome = (isKids ? p.crianca?.nome : p.nome) || '';
+      const matchNome = nome.toLowerCase().includes(busca);
+      const matchTipo = !tipo || (tipo === 'infantil' ? isKids : !isKids);
+      return matchNome && matchTipo;
+    });
+    renderTabela(lista);
+  };
+
+  // ---- MODAL ----
+  window.abrirModal = function(idx) {
+    const lista = getListaFiltrada();
+    const p = lista[idx];
+    pacienteAtual = p;
+    const isKids = p.tipo === 'infantil';
+    document.getElementById('modalContent').innerHTML = isKids
+      ? buildModalKids(p) : buildModalAdulto(p);
+    document.getElementById('modalBg').classList.add('open');
+  };
+
+  function getListaFiltrada() {
+    const busca = document.getElementById('searchInput').value.toLowerCase();
+    const tipo  = document.getElementById('filtroTipo').value;
+    return todosPacientes.filter(p => {
+      const isKids = p.tipo === 'infantil';
+      const nome = (isKids ? p.crianca?.nome : p.nome) || '';
+      const matchNome = nome.toLowerCase().includes(busca);
+      const matchTipo = !tipo || (tipo === 'infantil' ? isKids : !isKids);
+      return matchNome && matchTipo;
+    });
+  }
+
+  function tags(arr) {
+    if (!arr || !arr.length) return '<span style="color:var(--cinza);font-size:0.82rem;">Não informado</span>';
+    return arr.map(v => `<span class="m-tag">${v}</span>`).join('');
+  }
+
+  function val(v) {
+    return v || '<span style="color:var(--cinza)">—</span>';
+  }
+
+  function headerModal(nome, sub, foto, isKids) {
+    const avatarHtml = foto
+      ? `<div class="modal-avatar"><img src="${foto}"/></div>`
+      : `<div class="modal-avatar" style="font-size:2rem">${isKids ? '🧒' : '🧑'}</div>`;
+    return `
+      <div class="modal-header">
+        <div class="modal-header-left">
+          ${avatarHtml}
+          <div>
+            <div class="modal-nome">${nome}</div>
+            <div class="modal-sub">${sub}</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-action btn-print" onclick="imprimirFicha()">🖨️ Imprimir</button>
+          <button class="btn-action btn-pdf" onclick="gerarPDF()">📄 PDF</button>
+          <button class="btn-action btn-fechar" onclick="fecharModal()">✕</button>
+        </div>
+      </div>`;
+  }
+
+  // ---- MODAL INFANTIL ----
+  function buildModalKids(p) {
+    const nome = p.crianca?.nome || '—';
+    const sub  = `Infantil · ${p.crianca?.idade || '—'} · ${p.responsavel?.nome || '—'}`;
+    const foto = p.foto || '';
+    const temAlergia = p.saudeGeral?.alergiaMedicamento === 'Sim' || p.saudeGeral?.alergiaMedDesc;
+
+    return headerModal(nome, sub, foto, true) + `
+    <div class="modal-body" id="fichaConteudo">
+      ${temAlergia ? `<div class="alert-box">⚠️ ATENÇÃO: Alergia a medicamento — ${p.saudeGeral?.alergiaMedDesc || 'verificar'}</div>` : ''}
+
+      <div class="m-section">
+        <div class="m-section-title">🧒 Dados da Criança</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Nome</label><span>${val(p.crianca?.nome)}</span></div>
+          <div class="m-item"><label>Data de nascimento</label><span>${val(p.crianca?.dataNascimento)}</span></div>
+          <div class="m-item"><label>Idade</label><span>${val(p.crianca?.idade)}</span></div>
+          <div class="m-item"><label>Sexo</label><span>${val(p.crianca?.sexo)}</span></div>
+          <div class="m-item"><label>Escola / Série</label><span>${val(p.crianca?.escola)}</span></div>
+        </div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">👨‍👩‍👧 Responsável</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Nome</label><span>${val(p.responsavel?.nome)}</span></div>
+          <div class="m-item"><label>Parentesco</label><span>${val(p.responsavel?.parentesco)}</span></div>
+          <div class="m-item"><label>WhatsApp</label><span>${val(p.responsavel?.whatsapp)}</span></div>
+          <div class="m-item"><label>Plano</label><span>${val(p.responsavel?.plano)}</span></div>
+        </div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">❤️‍🩹 Saúde Geral</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Condições</label><div class="m-tags">${tags(p.saudeGeral?.condicoes)}</div></div>
+          <div class="m-item"><label>Medicamentos</label><span>${val(p.saudeGeral?.medicamentos)}</span></div>
+          <div class="m-item"><label>Alergia a medicamento</label><span style="color:${p.saudeGeral?.alergiaMedicamento==='Sim'?'var(--erro)':'inherit'}">${val(p.saudeGeral?.alergiaMedicamento)}</span></div>
+          <div class="m-item"><label>Qual alergia</label><span>${val(p.saudeGeral?.alergiaMedDesc)}</span></div>
+          <div class="m-item"><label>Alergia a látex</label><span>${val(p.saudeGeral?.alergiaLatex)}</span></div>
+          <div class="m-item"><label>Outras alergias</label><span>${val(p.saudeGeral?.outrasAlergias)}</span></div>
+          <div class="m-item"><label>Amamentação</label><span>${val(p.saudeGeral?.amamentacao)}</span></div>
+          <div class="m-item"><label>Prematuro</label><span>${val(p.saudeGeral?.prematuro)}</span></div>
+        </div>
+        ${p.saudeGeral?.observacoes ? `<div style="margin-top:10px"><label class="m-item" style="font-size:0.7rem;font-weight:800;color:var(--cinza)">OBS:</label> <span style="font-size:0.88rem;font-weight:700">${p.saudeGeral.observacoes}</span></div>` : ''}
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">🦷 Saúde Bucal</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Já foi ao dentista</label><span>${val(p.saudeBucal?.jaDentista)}</span></div>
+          <div class="m-item"><label>Experiência anterior</label><span>${val(p.saudeBucal?.experienciaAnterior)}</span></div>
+          <div class="m-item"><label>Motivo da consulta</label><span>${val(p.saudeBucal?.motivoConsulta)}</span></div>
+          <div class="m-item"><label>Escovação</label><span>${val(p.saudeBucal?.frequenciaEscovacao)}</span></div>
+          <div class="m-item"><label>Ajuda a escovar</label><span>${val(p.saudeBucal?.ajudaEscovacao)}</span></div>
+        </div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Hábitos bucais</label><div class="m-tags" style="margin-top:6px">${tags(p.saudeBucal?.habitosBucais)}</div></div>
+        ${p.saudeBucal?.queixaPrincipal ? `<div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza)">QUEIXA:</label> <span style="font-size:0.88rem;font-weight:700">${p.saudeBucal.queixaPrincipal}</span></div>` : ''}
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">🍎 Alimentação</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Frequência de doces</label><span>${val(p.alimentacao?.frequenciaDoces)}</span></div>
+          <div class="m-item"><label>Refrigerante</label><span>${val(p.alimentacao?.refrigerante)}</span></div>
+          <div class="m-item"><label>Come antes de dormir</label><span>${val(p.alimentacao?.comeNaCama)}</span></div>
+        </div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Comidas favoritas</label><div class="m-tags" style="margin-top:6px">${tags(p.alimentacao?.comidaFavorita)}</div></div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">🌈 Mundo da Criança</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Cor favorita</label><span>${val(p.mundoCrianca?.corFavorita)}</span></div>
+          <div class="m-item"><label>Animal favorito</label><span>${val(p.mundoCrianca?.animalFavorito)}</span></div>
+        </div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Brincadeiras</label><div class="m-tags" style="margin-top:6px">${(p.mundoCrianca?.brincadeiras||[]).map(v=>`<span class="m-tag fun">${v}</span>`).join('')||'—'}</div></div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Personagens</label><div class="m-tags" style="margin-top:6px">${(p.mundoCrianca?.personagens||[]).map(v=>`<span class="m-tag fun">${v}</span>`).join('')||'—'}</div></div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">😊 Comportamento</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Como está hoje</label><span>${val(p.comportamento?.sentimentoHoje)}</span></div>
+          <div class="m-item"><label>Reação a situações novas</label><span>${val(p.comportamento?.reacaoNova)}</span></div>
+        </div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Para maior conforto</label><div class="m-tags" style="margin-top:6px">${tags(p.comportamento?.confortoOptions)}</div></div>
+        ${p.comportamento?.observacoes ? `<div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza)">OBS:</label> <span style="font-size:0.88rem;font-weight:700">${p.comportamento.observacoes}</span></div>` : ''}
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">⭐ Avaliação</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Como soube</label><span>${val(p.avaliacao?.comoSoube)}</span></div>
+          <div class="m-item"><label>Estrelas</label><span>${'⭐'.repeat(p.avaliacao?.estrelas||0) || '—'}</span></div>
+        </div>
+        ${p.avaliacao?.mensagemEquipe ? `<div style="margin-top:10px;font-style:italic;color:var(--cinza);font-size:0.88rem">"${p.avaliacao.mensagemEquipe}"</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // ---- MODAL ADULTO ----
+  function buildModalAdulto(p) {
+    const nome = p.nome || '—';
+    const sub  = `Adulto · ${p.dataNascimento || '—'} · ${p.telefone || p.whatsapp || '—'}`;
+    const foto = p.foto || '';
+    const temAlergia = p.alergiaMedicamento === 'Sim';
+
+    return headerModal(nome, sub, foto, false) + `
+    <div class="modal-body" id="fichaConteudo">
+      ${temAlergia ? `<div class="alert-box">⚠️ ATENÇÃO: Alergia a medicamento — ${p.alergiaMedDesc || 'verificar'}</div>` : ''}
+
+      <div class="m-section">
+        <div class="m-section-title">🧑 Dados Pessoais</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Nome</label><span>${val(p.nome)}</span></div>
+          <div class="m-item"><label>Nascimento</label><span>${val(p.dataNascimento)}</span></div>
+          <div class="m-item"><label>Telefone</label><span>${val(p.telefone || p.whatsapp)}</span></div>
+          <div class="m-item"><label>CPF</label><span>${val(p.cpf)}</span></div>
+          <div class="m-item"><label>Plano</label><span>${val(p.plano)}</span></div>
+          <div class="m-item"><label>Profissão</label><span>${val(p.profissao)}</span></div>
+        </div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">❤️‍🩹 Saúde Geral</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Condições médicas</label><div class="m-tags">${tags(p.condicoes)}</div></div>
+          <div class="m-item"><label>Medicamentos</label><span>${val(p.medicamentos)}</span></div>
+          <div class="m-item"><label>Alergia a medicamento</label><span style="color:${temAlergia?'var(--erro)':'inherit'}">${val(p.alergiaMedicamento)}</span></div>
+          <div class="m-item"><label>Qual alergia</label><span>${val(p.alergiaMedDesc)}</span></div>
+          <div class="m-item"><label>Outras alergias</label><span>${val(p.outrasAlergias)}</span></div>
+        </div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">🦷 Saúde Bucal</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Motivo da consulta</label><span>${val(p.motivoConsulta)}</span></div>
+          <div class="m-item"><label>Última visita</label><span>${val(p.ultimaVisita)}</span></div>
+          <div class="m-item"><label>Escovação</label><span>${val(p.frequenciaEscovacao)}</span></div>
+          <div class="m-item"><label>Usa fio dental</label><span>${val(p.usaFio)}</span></div>
+        </div>
+        <div style="margin-top:10px"><label style="font-size:0.7rem;font-weight:800;color:var(--cinza);text-transform:uppercase">Queixa principal</label><div style="margin-top:4px;font-size:0.88rem;font-weight:700">${val(p.queixaPrincipal)}</div></div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-title">⭐ Avaliação</div>
+        <div class="m-grid">
+          <div class="m-item"><label>Como soube</label><span>${val(p.comoSoube)}</span></div>
+          <div class="m-item"><label>Nível de ansiedade</label><span>${val(p.ansiedade)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  window.fecharModal = function() {
+    document.getElementById('modalBg').classList.remove('open');
+    pacienteAtual = null;
+  };
+
+  window.fecharModalBg = function(e) {
+    if (e.target === document.getElementById('modalBg')) fecharModal();
+  };
+
+  // ---- IMPRESSÃO ----
+  window.imprimirFicha = function() {
+    const conteudo = document.getElementById('fichaConteudo');
+    if (!conteudo) return;
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = `
+      <div style="font-family:'Nunito',sans-serif;padding:20px;max-width:700px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:24px;border-bottom:2px solid #0abfbc;padding-bottom:16px;">
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#1a3a5c;margin:0">NEODONTO</h1>
+          <p style="font-size:0.8rem;color:#6b7280;letter-spacing:2px;text-transform:uppercase;margin:4px 0 0">Ficha de Anamnese</p>
+        </div>
+        ${conteudo.innerHTML}
+      </div>`;
+    printArea.style.display = 'block';
+    window.print();
+    printArea.style.display = 'none';
+  };
+
+  // ---- PDF ----
+  window.gerarPDF = function() {
+    if (!pacienteAtual) return;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const isKids = pacienteAtual.tipo === 'infantil';
+    const nome = isKids ? (pacienteAtual.crianca?.nome || '—') : (pacienteAtual.nome || '—');
+
+    let y = 20;
+    const lw = 190;
+    const ml = 10;
+
+    // Header
+    doc.setFillColor(26, 58, 92);
+    doc.rect(0, 0, 210, 30, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text('NEODONTO', 105, 13, { align: 'center' });
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('FICHA DE ANAMNESE ' + (isKids ? 'INFANTIL' : 'ADULTO'), 105, 22, { align: 'center' });
+
+    y = 40;
+    doc.setTextColor(26, 58, 92);
+
+    function titulo(txt) {
+      doc.setFillColor(224, 250, 250);
+      doc.rect(ml, y - 4, lw, 8, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(10, 191, 188);
+      doc.text(txt.toUpperCase(), ml + 2, y + 1);
+      y += 10;
+      doc.setTextColor(26, 58, 92);
+    }
+
+    function campo(label, valor) {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(107, 114, 128);
+      doc.text(label.toUpperCase(), ml, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26, 58, 92);
+      const txt = valor || '—';
+      const lines = doc.splitTextToSize(txt, lw - 5);
+      doc.text(lines, ml, y + 4);
+      y += 4 + (lines.length * 5);
+    }
+
+    function listaCampo(label, arr) {
+      if (!arr || !arr.length) return campo(label, '—');
+      campo(label, arr.join(' · '));
+    }
+
+    // Nome
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(26, 58, 92);
+    doc.text(nome, ml, y);
+    y += 8;
+
+    const dataFicha = pacienteAtual.criadoEm
+      ? new Date(pacienteAtual.criadoEm.seconds * 1000).toLocaleDateString('pt-BR')
+      : new Date().toLocaleDateString('pt-BR');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(107, 114, 128);
+    doc.text(`Data: ${dataFicha}`, ml, y);
+    y += 10;
+
+    if (isKids) {
+      const p = pacienteAtual;
+      titulo('Dados da Criança');
+      campo('Data de nascimento', p.crianca?.dataNascimento);
+      campo('Idade', p.crianca?.idade);
+      campo('Sexo', p.crianca?.sexo);
+      campo('Escola / Série', p.crianca?.escola);
+      y += 4;
+
+      titulo('Responsável');
+      campo('Nome', p.responsavel?.nome);
+      campo('Parentesco', p.responsavel?.parentesco);
+      campo('WhatsApp', p.responsavel?.whatsapp);
+      campo('Plano', p.responsavel?.plano);
+      y += 4;
+
+      titulo('Saúde Geral');
+      listaCampo('Condições médicas', p.saudeGeral?.condicoes);
+      campo('Toma medicamento', p.saudeGeral?.tomaMedicamento);
+      campo('Medicamentos', p.saudeGeral?.medicamentos);
+      campo('Alergia a medicamento', p.saudeGeral?.alergiaMedicamento);
+      campo('Qual alergia', p.saudeGeral?.alergiaMedDesc);
+      campo('Alergia a látex', p.saudeGeral?.alergiaLatex);
+      campo('Outras alergias', p.saudeGeral?.outrasAlergias);
+      campo('Observações', p.saudeGeral?.observacoes);
+      y += 4;
+
+      titulo('Saúde Bucal');
+      campo('Já foi ao dentista', p.saudeBucal?.jaDentista);
+      campo('Experiência anterior', p.saudeBucal?.experienciaAnterior);
+      campo('Motivo da consulta', p.saudeBucal?.motivoConsulta);
+      listaCampo('Hábitos bucais', p.saudeBucal?.habitosBucais);
+      campo('Frequência de escovação', p.saudeBucal?.frequenciaEscovacao);
+      campo('Queixa principal', p.saudeBucal?.queixaPrincipal);
+      y += 4;
+
+      titulo('Alimentação');
+      listaCampo('Comidas favoritas', p.alimentacao?.comidaFavorita);
+      campo('Frequência de doces', p.alimentacao?.frequenciaDoces);
+      campo('Refrigerante', p.alimentacao?.refrigerante);
+      y += 4;
+
+      titulo('Comportamento');
+      campo('Como está hoje', p.comportamento?.sentimentoHoje);
+      campo('Reação a novidades', p.comportamento?.reacaoNova);
+      listaCampo('Para maior conforto', p.comportamento?.confortoOptions);
+      campo('Observações', p.comportamento?.observacoes);
+      y += 4;
+
+      titulo('Mundo da Criança');
+      listaCampo('Brincadeiras', p.mundoCrianca?.brincadeiras);
+      listaCampo('Personagens', p.mundoCrianca?.personagens);
+      campo('Cor favorita', p.mundoCrianca?.corFavorita);
+      campo('Animal favorito', p.mundoCrianca?.animalFavorito);
+      y += 4;
+
+      titulo('Avaliação');
+      campo('Como soube da NEODONTO', p.avaliacao?.comoSoube);
+      campo('Estrelas', '⭐'.repeat(p.avaliacao?.estrelas || 0) || '—');
+      campo('Mensagem', p.avaliacao?.mensagemEquipe);
+
+    } else {
+      const p = pacienteAtual;
+      titulo('Dados Pessoais');
+      campo('Data de nascimento', p.dataNascimento);
+      campo('Telefone', p.telefone || p.whatsapp);
+      campo('CPF', p.cpf);
+      campo('Plano', p.plano);
+      y += 4;
+
+      titulo('Saúde Geral');
+      listaCampo('Condições médicas', p.condicoes);
+      campo('Medicamentos', p.medicamentos);
+      campo('Alergia a medicamento', p.alergiaMedicamento);
+      campo('Qual alergia', p.alergiaMedDesc);
+      campo('Outras alergias', p.outrasAlergias);
+      y += 4;
+
+      titulo('Saúde Bucal');
+      campo('Motivo da consulta', p.motivoConsulta);
+      campo('Frequência de escovação', p.frequenciaEscovacao);
+      campo('Queixa principal', p.queixaPrincipal);
+      y += 4;
+
+      titulo('Avaliação');
+      campo('Como soube', p.comoSoube);
+      campo('Nível de ansiedade', p.ansiedade);
+    }
+
+    // Rodapé
+    const totalPags = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPags; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(180, 180, 180);
+      doc.text(`NEODONTO Odontologia · Goiânia-GO · Pág ${i}/${totalPags}`, 105, 290, { align: 'center' });
+    }
+
+    doc.save(`ficha-${nome.replace(/\s+/g,'_')}.pdf`);
+  };
+</script>
+</body>
+</html>
