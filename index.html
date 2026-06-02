@@ -1,1361 +1,578 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEODONTO Kids – Ficha da Criança</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --tiffany: #0abfbc;
-      --tiffany-light: #e0fafa;
-      --tiffany-mid: #5dd5d3;
-      --gold: #c9a84c;
-      --gold-light: #fdf4e0;
-      --azul: #1a3a5c;
-      --branco: #ffffff;
-      --bg: #f7fdfd;
-      --cinza: #6b7280;
-      --borda: #c8ecec;
-      --erro: #ef4444;
-      --sucesso: #10b981;
-      --laranja: #f97316;
-      --rosa: #f472b6;
-      --roxo: #a78bfa;
-      --verde: #34d399;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 80px;
-    }
-
-    /* HEADER */
-    header {
-      width: 100%;
-      background: var(--azul);
-      padding: 32px 24px 28px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    header::before {
-      content: '🦷 ⭐ 🦷 ⭐ 🦷 ⭐ 🦷 ⭐ 🦷 ⭐ 🦷';
-      display: block;
-      font-size: 1rem;
-      opacity: 0.15;
-      letter-spacing: 6px;
-      margin-bottom: 12px;
-    }
-
-    .logo-header {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 2px;
-      margin-bottom: 6px;
-    }
-
-    .logo-neo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
-      color: var(--tiffany-mid);
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .logo-donto {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
-      color: var(--branco);
-      font-weight: 700;
-    }
-
-    .logo-kids {
-      background: var(--gold);
-      color: var(--azul);
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-left: 8px;
-      vertical-align: middle;
-      text-transform: uppercase;
-    }
-
-    header p {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    /* PROGRESS */
-    .progress-wrap {
-      width: 100%;
-      max-width: 680px;
-      padding: 20px 16px 0;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--cinza);
-      margin-bottom: 6px;
-    }
-
-    .progress-bar {
-      height: 10px;
-      background: var(--borda);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--tiffany), var(--gold));
-      border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-
-    /* CONTAINER */
-    .container {
-      width: 100%;
-      max-width: 680px;
-      padding: 0 16px;
-      margin-top: 24px;
-    }
-
-    /* SECTION */
-    .section {
-      background: var(--branco);
-      border-radius: 20px;
-      padding: 28px 24px;
-      margin-bottom: 20px;
-      border: 2px solid transparent;
-      box-shadow: 0 4px 20px rgba(10,191,188,0.07);
-      transition: border-color 0.3s;
-    }
-
-    .section:focus-within {
-      border-color: var(--tiffany);
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 22px;
-      padding-bottom: 14px;
-      border-bottom: 2px dashed var(--borda);
-    }
-
-    .section-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-
-    .section-title {
-      font-family: 'Nunito', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 900;
-      color: var(--azul);
-    }
-
-    .section-subtitle {
-      font-size: 0.78rem;
-      color: var(--cinza);
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    /* FIELDS */
-    .field-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .field-group.single {
-      grid-template-columns: 1fr;
-    }
-
-    .field-group.triple {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .field.span-2 {
-      grid-column: span 2;
-    }
-
-    label {
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: var(--azul);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    input[type="tel"],
-    input[type="number"],
-    select,
-    textarea {
-      border: 2px solid var(--borda);
-      border-radius: 12px;
-      padding: 11px 14px;
-      font-size: 0.92rem;
-      font-family: 'Nunito', sans-serif;
-      color: var(--azul);
-      background: var(--branco);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      width: 100%;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--tiffany);
-      box-shadow: 0 0 0 3px rgba(10,191,188,0.12);
-    }
-
-    textarea { resize: vertical; min-height: 80px; }
-
-    /* CHECKBOX GRID */
-    .check-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 8px;
-    }
-
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 12px;
-      border-radius: 12px;
-      border: 2px solid var(--borda);
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--branco);
-    }
-
-    .check-item:hover {
-      border-color: var(--tiffany-mid);
-      background: var(--tiffany-light);
-    }
-
-    .check-item input[type="checkbox"] {
-      accent-color: var(--tiffany);
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .check-item span {
-      font-size: 0.83rem;
-      font-weight: 700;
-      color: var(--azul);
-    }
-
-    .check-item.checked {
-      border-color: var(--tiffany);
-      background: var(--tiffany-light);
-    }
-
-    /* RADIO GROUP */
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .radio-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 30px;
-      border: 2px solid var(--borda);
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--branco);
-    }
-
-    .radio-pill input[type="radio"] {
-      accent-color: var(--tiffany);
-      width: 15px;
-      height: 15px;
-    }
-
-    .radio-pill span {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--azul);
-    }
-
-    .radio-pill:has(input:checked) {
-      border-color: var(--tiffany);
-      background: var(--tiffany-light);
-    }
-
-    /* EMOJI CARDS (for feelings/characters) */
-    .emoji-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 10px;
-    }
-
-    .emoji-card {
-      border: 2px solid var(--borda);
-      border-radius: 14px;
-      padding: 14px 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s;
-      background: var(--branco);
-    }
-
-    .emoji-card:hover {
-      transform: scale(1.04);
-      border-color: var(--tiffany-mid);
-    }
-
-    .emoji-card.selected {
-      border-color: var(--tiffany);
-      background: var(--tiffany-light);
-      transform: scale(1.05);
-      box-shadow: 0 4px 14px rgba(10,191,188,0.18);
-    }
-
-    .emoji-card .emoji-big {
-      font-size: 2rem;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .emoji-card .emoji-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--azul);
-    }
-
-    .emoji-card input {
-      display: none;
-    }
-
-    /* STAR RATING */
-    .star-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .star-btn {
-      font-size: 1.8rem;
-      cursor: pointer;
-      transition: transform 0.15s;
-      line-height: 1;
-      border: none;
-      background: none;
-      padding: 2px;
-    }
-
-    .star-btn:hover { transform: scale(1.2); }
-
-    /* SELFIE */
-    .selfie-area {
-      border: 2px dashed var(--tiffany-mid);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-      background: var(--tiffany-light);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .selfie-area:hover {
-      background: #cdf4f4;
-      border-color: var(--tiffany);
-    }
-
-    .selfie-area .selfie-icon { font-size: 2.5rem; margin-bottom: 8px; }
-    .selfie-area p { font-size: 0.85rem; color: var(--cinza); font-weight: 700; }
-
-    #selfiePreview {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid var(--tiffany);
-      display: none;
-      margin: 12px auto 0;
-    }
-
-    /* SUBMIT */
-    .btn-submit {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, var(--tiffany) 0%, var(--tiffany-mid) 100%);
-      border: none;
-      border-radius: 16px;
-      color: var(--branco);
-      font-family: 'Nunito', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 6px 20px rgba(10,191,188,0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(10,191,188,0.4);
-    }
-
-    .btn-submit:disabled {
-      background: #b0d8d7;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--azul);
-      color: var(--branco);
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      z-index: 999;
-      transition: transform 0.4s ease;
-      white-space: nowrap;
-      border: 2px solid var(--tiffany);
-    }
-
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* SUCCESS SCREEN */
-    #successScreen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px;
-      gap: 16px;
-    }
-
-    #successScreen .success-emoji { font-size: 4rem; animation: bounce 1s infinite alternate; }
-    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
-    #successScreen h2 { font-size: 1.6rem; font-weight: 900; color: var(--azul); }
-    #successScreen p { color: var(--cinza); font-weight: 600; font-size: 0.95rem; max-width: 300px; }
-
-    /* COLORS for section icons */
-    .icon-blue { background: #e0edfa; }
-    .icon-teal { background: var(--tiffany-light); }
-    .icon-gold { background: var(--gold-light); }
-    .icon-orange { background: #fff3e0; }
-    .icon-pink { background: #fce7f3; }
-    .icon-purple { background: #f3e8ff; }
-    .icon-green { background: #d1fae5; }
-    .icon-red { background: #fee2e2; }
-
-    /* REQUIRED ASTERISK */
-    .req { color: var(--erro); margin-left: 2px; }
-
-    /* HELPER TEXT */
-    .helper { font-size: 0.76rem; color: var(--cinza); font-weight: 600; margin-top: 2px; }
-
-    /* DIVIDER */
-    .divider { height: 1px; background: var(--borda); margin: 18px 0; }
-
-    /* INPUT FILE hidden */
-    #selfieInput { display: none; }
-
-    /* Responsive */
-    @media (max-width: 500px) {
-      .field-group { grid-template-columns: 1fr; }
-      .field.span-2 { grid-column: span 1; }
-      .field-group.triple { grid-template-columns: 1fr 1fr; }
-      .check-grid { grid-template-columns: 1fr 1fr; }
-      .emoji-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-
-    .section-note {
-      background: var(--tiffany-light);
-      border-left: 3px solid var(--tiffany);
-      border-radius: 0 10px 10px 0;
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--azul);
-      margin-bottom: 18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback | NEODONTO Odontologia</title>
+<meta name="description" content="Avalie sua experiência na NEODONTO Odontologia em Goiânia. Sua opinião é essencial para continuarmos oferecendo o melhor cuidado à sua saúde bucal.">
+<meta property="og:title" content="Feedback | NEODONTO Odontologia">
+<meta property="og:description" content="Como foi sua experiência? Avalie nosso atendimento.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clinicaneodonto.github.io/feedback-neodonto">
+<meta property="og:image" content="https://clinicaneodonto.github.io/logo_neodonto.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#0abfbc">
+<meta property="og:site_name" content="NEODONTO Odontologia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Feedback | NEODONTO Odontologia">
+<meta name="twitter:description" content="Como foi sua experiência? Avalie nosso atendimento em Goiânia.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #0abfbc;
+    --teal-dark: #089a97;
+    --teal-light: #e0f7f7;
+    --teal-glow: rgba(10,191,188,0.15);
+    --gold: #c9a84c;
+    --dark: #1a1a1a;
+    --mid: #555;
+    --soft: #888;
+    --border: rgba(10,191,188,0.2);
+    --bg: #f8fffe;
+    --white: #ffffff;
+    --radius: 14px;
+    --shadow: 0 8px 32px rgba(10,191,188,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 60px; }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 36px; }
+  .logo-block { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .logo-dots { display: flex; gap: 3px; align-items: flex-end; }
+  .logo-dots span { display: block; background: var(--teal); border-radius: 50%; }
+  .logo-dots span:nth-child(1){width:5px;height:5px;}
+  .logo-dots span:nth-child(2){width:7px;height:7px;}
+  .logo-dots span:nth-child(3){width:9px;height:9px;}
+  .logo-dots span:nth-child(4){width:11px;height:11px;}
+  .logo-text-wrap { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+  .logo-odonto { font-size: 8px; font-weight: 500; letter-spacing: 0.28em; color: var(--teal); text-transform: uppercase; }
+  .logo-neo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--dark); letter-spacing: -0.5px; line-height: 1; }
+  .logo-neo span { color: var(--teal); }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--dark); line-height: 1.25; margin-bottom: 8px; }
+  .header-sub { font-size: 14px; color: var(--soft); font-weight: 300; max-width: 420px; margin: 0 auto; line-height: 1.6; }
+  .divider { width: 48px; height: 3px; background: linear-gradient(90deg, var(--teal), var(--gold)); border-radius: 2px; margin: 16px auto; }
+
+  /* CARD */
+  .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
+  .card-title { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: var(--teal); text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+  .card-title-icon { width: 20px; height: 20px; background: var(--teal-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* FIELDS */
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: var(--mid); margin-bottom: 7px; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 12px 16px; border: 1.5px solid rgba(10,191,188,0.22);
+    border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: var(--dark); background: var(--white); outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease; resize: none;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-glow); }
+  .field textarea { height: 100px; line-height: 1.6; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media(max-width:480px){ .field-row { grid-template-columns: 1fr; } }
+
+  /* ANÔNIMO */
+  .input-anonimo { background: #f2f2f2 !important; color: var(--soft) !important; pointer-events: none; border-color: #e0e0e0 !important; font-style: italic; }
+  .anonimo-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 7px 12px; border-radius: 50px; border: 1.5px solid rgba(10,191,188,0.22); background: var(--white); transition: all 0.22s ease; width: fit-content; margin-top: 10px; }
+  .anonimo-toggle:hover { border-color: var(--teal); background: var(--teal-glow); }
+  .anonimo-toggle.on { border-color: var(--teal); background: var(--teal-light); }
+  .anonimo-toggle .toggle-dot { width: 32px; height: 18px; border-radius: 50px; background: #ddd; position: relative; transition: background 0.22s ease; flex-shrink: 0; }
+  .anonimo-toggle.on .toggle-dot { background: var(--teal); }
+  .anonimo-toggle .toggle-dot::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: left 0.22s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+  .anonimo-toggle.on .toggle-dot::after { left: 17px; }
+  .anonimo-toggle .toggle-label { font-size: 12px; font-weight: 500; color: var(--soft); transition: color 0.2s ease; }
+  .anonimo-toggle.on .toggle-label { color: var(--teal-dark); }
+  .anonimo-badge { display: none; align-items: center; gap: 5px; background: var(--teal-light); border: 1px solid rgba(10,191,188,0.3); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--teal-dark); font-weight: 500; margin-top: 8px; }
+  .anonimo-badge.show { display: flex; }
+  .anonimo-badge svg { width: 13px; height: 13px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+
+  /* STARS */
+  .star-section { margin-bottom: 28px; }
+  .star-label { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
+  .stars { display: flex; gap: 6px; }
+  .star { cursor: pointer; transition: transform 0.18s cubic-bezier(.34,1.56,.64,1); user-select: none; }
+  .star svg { width: 36px; height: 36px; fill: #e5e5e5; transition: fill 0.18s ease; stroke: none; }
+  .star:hover svg, .star.active svg { fill: var(--gold); }
+  .star:hover { transform: scale(1.18); }
+  .star-caption { font-size: 12px; color: var(--soft); margin-top: 8px; font-style: italic; min-height: 18px; }
+
+  /* EMOJI */
+  .emoji-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+  .emoji-option { flex: 1; min-width: 80px; cursor: pointer; border: 1.5px solid rgba(10,191,188,0.18); border-radius: 12px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 5px; background: var(--white); transition: all 0.22s ease; }
+  .emoji-option:hover { border-color: var(--teal); background: var(--teal-glow); transform: translateY(-2px); }
+  .emoji-option.selected { border-color: var(--teal); background: var(--teal-light); box-shadow: 0 0 0 3px var(--teal-glow); }
+  .emoji-option .em { font-size: 28px; line-height: 1; }
+  .emoji-option .em-label { font-size: 11px; color: var(--soft); font-weight: 500; text-align: center; }
+
+  /* PILLS */
+  .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { cursor: pointer; padding: 8px 16px; border-radius: 50px; border: 1.5px solid rgba(10,191,188,0.22); font-size: 13px; color: var(--mid); background: var(--white); transition: all 0.2s ease; user-select: none; }
+  .pill:hover { border-color: var(--teal); color: var(--teal-dark); background: var(--teal-glow); }
+  .pill.selected { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 500; }
+
+  /* NPS */
+  .nps-track { display: flex; gap: 5px; flex-wrap: wrap; }
+  .nps-btn { width: 46px; height: 46px; border-radius: 10px; border: 1.5px solid rgba(10,191,188,0.2); background: var(--white); font-size: 14px; font-weight: 500; cursor: pointer; color: var(--mid); transition: all 0.2s ease; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+  .nps-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
+  .nps-btn.selected { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .nps-labels { display: flex; justify-content: space-between; margin-top: 7px; font-size: 11px; color: var(--soft); }
+
+  /* SUBMIT */
+  .submit-btn { display: block; width: 100%; padding: 16px 24px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; transition: all 0.25s ease; box-shadow: 0 6px 20px rgba(10,191,188,0.35); margin-top: 8px; }
+  .submit-btn:hover:not(:disabled) { box-shadow: 0 8px 28px rgba(10,191,188,0.45); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { cursor: not-allowed; }
+
+  /* SUCCESS */
+  .success-screen { display: none; text-align: center; padding: 60px 20px; }
+  .success-screen.show { display: block; animation: fadeUp 0.5s ease; }
+  .success-circle { width: 80px; height: 80px; background: var(--teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 2px solid var(--teal); }
+  .success-circle svg { width: 36px; height: 36px; stroke: var(--teal); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ERROR TOAST */
+  .toast { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #c0392b; color: #fff; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999; white-space: nowrap; }
+  .toast.show { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px) translateX(-50%); } to { opacity: 1; transform: translateY(0) translateX(-50%); } }
+  .form-main { animation: fadeUp 0.4s ease; }
+  .footer-note { text-align: center; font-size: 12px; color: var(--soft); margin-top: 28px; line-height: 1.6; }
+  .footer-note a { color: var(--teal); text-decoration: none; }
+</style>
 </head>
 <body>
+<div class="page-wrap">
 
-<!-- HEADER -->
-<header>
-  <div class="logo-header">
-    <span class="logo-neo">NEO</span><span class="logo-donto">DONTO</span>
-    <span class="logo-kids">KIDS</span>
-  </div>
-  <p>Ficha de Anamnese Infantil</p>
-</header>
-
-<!-- PROGRESS -->
-<div class="progress-wrap">
-  <div class="progress-label">
-    <span>Seu progresso</span>
-    <span id="progressPct">0%</span>
-  </div>
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-</div>
-
-<!-- MAIN FORM -->
-<div class="container" id="formContainer">
-
-  <!-- 1. DADOS DA CRIANÇA -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-blue">🧒</div>
-      <div>
-        <div class="section-title">Dados da Criança</div>
-        <div class="section-subtitle">Informações básicas do paciente</div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-block">
+      <div class="logo-dots"><span></span><span></span><span></span><span></span></div>
+      <div class="logo-text-wrap">
+        <span class="logo-odonto">Odontologia</span>
+        <span class="logo-neo">NEO<span>DONTO</span></span>
       </div>
     </div>
-    <div class="field-group">
-      <div class="field span-2">
-        <label>Nome completo da criança <span class="req">*</span></label>
-        <input type="text" id="nomeCrianca" placeholder="Nome da criança" required />
+    <h1 class="header-title">Como foi sua experiência?</h1>
+    <div class="divider"></div>
+    <p class="header-sub">Sua opinião é essencial para continuarmos oferecendo o melhor cuidado à sua saúde bucal.</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-main" id="formMain">
+
+    <!-- CARD 1: IDENTIFICAÇÃO -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
+            <circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/>
+          </svg>
+        </div>
+        Dados do paciente
       </div>
-      <div class="field">
-        <label>Data de nascimento <span class="req">*</span></label>
-        <input type="date" id="dataNascimento" required />
+
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>Nome completo</label>
+          <input type="text" placeholder="Seu nome" id="inputNome">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>WhatsApp <span style="font-size:11px;color:var(--soft);font-weight:400;">(opcional)</span></label>
+          <input type="tel" placeholder="(62) 99999-9999" id="inputWhats">
+        </div>
       </div>
-      <div class="field">
-        <label>Idade</label>
-        <input type="text" id="idadeCrianca" placeholder="Ex: 7 anos" readonly />
+
+      <div class="anonimo-toggle" id="anonimoToggle" onclick="toggleAnonimo()">
+        <div class="toggle-dot"></div>
+        <span class="toggle-label">Responder anonimamente</span>
       </div>
-      <div class="field">
-        <label>Sexo</label>
-        <select id="sexo">
-          <option value="">Selecione</option>
-          <option>Masculino</option>
-          <option>Feminino</option>
-          <option>Prefiro não informar</option>
+      <div class="anonimo-badge" id="anonimoBadge">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3"/><path d="M3 14s0-4 5-4 5 4 5 4"/><line x1="12" y1="3" x2="14" y2="5"/><line x1="14" y1="3" x2="12" y2="5"/></svg>
+        Nome e telefone ocultados — obrigado pela sua honestidade!
+      </div>
+
+      <div class="field" style="margin-top:18px;">
+        <label>Dentista que te atendeu</label>
+        <select id="inputDentista">
+          <option value="">Selecione o profissional</option>
+          <option>Dra. Fabrícia</option>
+          <option>Dra. Gabriela Dantas</option>
+          <option>Dr. Gustavo</option>
+          <option>Dra. Julia</option>
+          <option>Dra. Laura</option>
+          <option>Dr. Luiz Henrique</option>
+          <option>Dr. Marcelo</option>
+          <option>Dra. Mariza</option>
+          <option>Dra. Taynara</option>
         </select>
       </div>
-      <div class="field">
-        <label>Escola / Série</label>
-        <input type="text" id="escola" placeholder="Ex: 2º ano" />
-      </div>
-    </div>
-  </div>
 
-  <!-- 2. DADOS DO RESPONSÁVEL -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-teal">👨‍👩‍👧</div>
-      <div>
-        <div class="section-title">Responsável</div>
-        <div class="section-subtitle">Quem cuida do pequeno(a)</div>
-      </div>
-    </div>
-    <div class="field-group">
-      <div class="field span-2">
-        <label>Nome do responsável <span class="req">*</span></label>
-        <input type="text" id="nomeResponsavel" placeholder="Nome completo" required />
-      </div>
-      <div class="field">
-        <label>Parentesco</label>
-        <select id="parentesco">
-          <option value="">Selecione</option>
-          <option>Mãe</option>
-          <option>Pai</option>
-          <option>Avó / Avô</option>
-          <option>Tia / Tio</option>
+      <div class="field" style="margin-bottom:0;">
+        <label>Tipo de tratamento realizado</label>
+        <select id="inputTratamento">
+          <option value="">Selecione o tratamento</option>
+          <option>Consulta / Avaliação</option>
+          <option>Limpeza (Profilaxia)</option>
+          <option>Clareamento dental</option>
+          <option>Ortodontia (Aparelho / Alinhador)</option>
+          <option>Implante dentário</option>
+          <option>Prótese</option>
+          <option>Tratamento de canal</option>
+          <option>Restauração</option>
+          <option>Odontopediatria</option>
           <option>Outro</option>
         </select>
       </div>
-      <div class="field">
-        <label>WhatsApp <span class="req">*</span></label>
-        <input type="tel" id="whatsapp" placeholder="(62) 9 0000-0000" required />
+    </div>
+
+    <!-- CARD 2: AVALIAÇÃO GERAL -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="var(--teal)">
+            <path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6z"/>
+          </svg>
+        </div>
+        Avaliação geral
       </div>
-      <div class="field">
-        <label>CPF da criança</label>
-        <input type="text" id="cpf" placeholder="000.000.000-00" />
+
+      <div class="star-section">
+        <div class="star-label">Como você avalia sua experiência na clínica?</div>
+        <div class="stars" id="starsGeneral">
+          <div class="star" data-val="1"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="2"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="3"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="4"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="5"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+        </div>
+        <div class="star-caption" id="captionGeneral">Clique para avaliar</div>
       </div>
-      <div class="field">
-        <label>Plano odontológico</label>
-        <input type="text" id="plano" placeholder="Nome do plano ou particular" />
+
+      <div class="star-section">
+        <div class="star-label">Como avalia o atendimento do dentista?</div>
+        <div class="stars" id="starsDentista">
+          <div class="star" data-val="1"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="2"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="3"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="4"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="5"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+        </div>
+        <div class="star-caption" id="captionDentista">Clique para avaliar</div>
+      </div>
+
+      <div class="star-section" style="margin-bottom:0;">
+        <div class="star-label">Como avalia o atendimento da recepção?</div>
+        <div class="stars" id="starsRecepcao">
+          <div class="star" data-val="1"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="2"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="3"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="4"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="star" data-val="5"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+        </div>
+        <div class="star-caption" id="captionRecepcao">Clique para avaliar</div>
       </div>
     </div>
+
+    <!-- CARD 3: SENSAÇÃO -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
+            <circle cx="8" cy="8" r="6"/>
+            <path d="M5 9s1 2 3 2 3-2 3-2"/>
+            <circle cx="6" cy="6.5" r="0.8" fill="var(--teal)"/>
+            <circle cx="10" cy="6.5" r="0.8" fill="var(--teal)"/>
+          </svg>
+        </div>
+        Como você se sentiu?
+      </div>
+      <div class="emoji-grid">
+        <div class="emoji-option" data-val="otimo"><span class="em">😁</span><span class="em-label">Ótimo!</span></div>
+        <div class="emoji-option" data-val="bem"><span class="em">😊</span><span class="em-label">Bem</span></div>
+        <div class="emoji-option" data-val="neutro"><span class="em">😐</span><span class="em-label">Neutro</span></div>
+        <div class="emoji-option" data-val="ansioso"><span class="em">😰</span><span class="em-label">Ansioso</span></div>
+        <div class="emoji-option" data-val="ruim"><span class="em">😟</span><span class="em-label">Poderia melhorar</span></div>
+      </div>
+    </div>
+
+    <!-- CARD 4: ASPECTOS POSITIVOS -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
+            <path d="M2 4h12M2 8h8M2 12h10"/>
+          </svg>
+        </div>
+        O que se destacou positivamente?
+      </div>
+      <div class="pill-grid">
+        <div class="pill">Atendimento humanizado</div>
+        <div class="pill">Pontualidade</div>
+        <div class="pill">Explicações claras</div>
+        <div class="pill">Estrutura da clínica</div>
+        <div class="pill">Limpeza e higiene</div>
+        <div class="pill">Tecnologia e equipamentos</div>
+        <div class="pill">Condições de pagamento</div>
+        <div class="pill">Resultado do tratamento</div>
+        <div class="pill">Conforto no atendimento</div>
+        <div class="pill">Facilidade de agendamento</div>
+      </div>
+    </div>
+
+    <!-- CARD 5: NPS -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
+            <path d="M14 5l-8 8-4-4"/>
+          </svg>
+        </div>
+        Indicação
+      </div>
+      <div class="star-label" style="margin-bottom:14px;">De 0 a 10, qual a probabilidade de você indicar a NEODONTO para um amigo ou familiar?</div>
+      <div class="nps-track">
+        <button class="nps-btn" data-val="0">0</button>
+        <button class="nps-btn" data-val="1">1</button>
+        <button class="nps-btn" data-val="2">2</button>
+        <button class="nps-btn" data-val="3">3</button>
+        <button class="nps-btn" data-val="4">4</button>
+        <button class="nps-btn" data-val="5">5</button>
+        <button class="nps-btn" data-val="6">6</button>
+        <button class="nps-btn" data-val="7">7</button>
+        <button class="nps-btn" data-val="8">8</button>
+        <button class="nps-btn" data-val="9">9</button>
+        <button class="nps-btn" data-val="10">10</button>
+      </div>
+      <div class="nps-labels">
+        <span>Jamais indicaria</span>
+        <span>Com certeza indicaria!</span>
+      </div>
+    </div>
+
+    <!-- CARD 6: COMENTÁRIOS -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H2a1 1 0 0 0-1 1v9l3-2h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+          </svg>
+        </div>
+        Deixe seu comentário
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>O que você mais gostou na consulta?</label>
+        <textarea id="comentarioPositivo" placeholder="Conte o que mais te agradou..."></textarea>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Tem alguma sugestão de melhoria?</label>
+        <textarea id="comentarioMelhoria" placeholder="Sua opinião nos ajuda a crescer..."></textarea>
+      </div>
+    </div>
+
+    <!-- CARD 7: AUTORIZAÇÃO GOOGLE -->
+    <div class="card" style="background:var(--teal-light);border-color:rgba(10,191,188,0.3);">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <input type="checkbox" id="autorizaGoogle" style="width:18px;height:18px;margin-top:2px;accent-color:var(--teal);flex-shrink:0;cursor:pointer;">
+        <label for="autorizaGoogle" style="font-size:13px;color:var(--mid);line-height:1.6;cursor:pointer;">
+          <strong style="color:var(--teal-dark);">Autorizo</strong> o uso do meu comentário como avaliação no Google Meu Negócio da NEODONTO, ajudando outros pacientes a conhecerem a clínica. Meu nome poderá ser exibido parcialmente.
+        </label>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="btnEnviar" onclick="enviarFeedback()">
+      Enviar avaliação ✦
+    </button>
+
+    <p class="footer-note">
+      Seus dados são protegidos e utilizados apenas para melhoria dos nossos serviços.<br>
+      <a href="https://clinicaneodonto.com.br">NEODONTO Odontologia</a> · Goiânia, GO
+    </p>
   </div>
 
-  <!-- 3. SAÚDE GERAL -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-red">❤️‍🩹</div>
-      <div>
-        <div class="section-title">Saúde Geral</div>
-        <div class="section-subtitle">Histórico médico da criança</div>
-      </div>
+  <!-- TELA DE SUCESSO -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-circle">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <div class="section-note">📋 Responda com base no histórico do seu filho(a)</div>
-
-    <div class="field-group single">
-      <div class="field">
-        <label>A criança tem ou já teve alguma dessas condições?</label>
-        <div class="check-grid" style="margin-top:8px;" id="condicoes">
-          <label class="check-item"><input type="checkbox" value="Asma/Bronquite" /><span>🫁 Asma/Bronquite</span></label>
-          <label class="check-item"><input type="checkbox" value="Diabetes" /><span>💉 Diabetes</span></label>
-          <label class="check-item"><input type="checkbox" value="Cardiopatia" /><span>❤️ Cardiopatia</span></label>
-          <label class="check-item"><input type="checkbox" value="Epilepsia" /><span>⚡ Epilepsia</span></label>
-          <label class="check-item"><input type="checkbox" value="Hemofilia" /><span>🩸 Hemofilia</span></label>
-          <label class="check-item"><input type="checkbox" value="Hipertensão" /><span>📈 Hipertensão</span></label>
-          <label class="check-item"><input type="checkbox" value="Distúrbios de coagulação" /><span>🩹 Coagulação</span></label>
-          <label class="check-item"><input type="checkbox" value="Autismo/TEA" /><span>🧩 TEA/Autismo</span></label>
-          <label class="check-item"><input type="checkbox" value="TDAH" /><span>⚡ TDAH</span></label>
-          <label class="check-item"><input type="checkbox" value="Síndrome de Down" /><span>💛 Down</span></label>
-          <label class="check-item"><input type="checkbox" value="Problemas renais" /><span>🫘 Rins</span></label>
-          <label class="check-item"><input type="checkbox" value="Nenhuma" /><span>✅ Nenhuma</span></label>
-        </div>
-      </div>
-    </div>
-
+    <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);margin-bottom:10px;">Obrigado pelo seu feedback!</h2>
     <div class="divider"></div>
-
-    <div class="field-group">
-      <div class="field">
-        <label>Está tomando algum medicamento?</label>
-        <div class="radio-group" id="tomaMedicamento">
-          <label class="radio-pill"><input type="radio" name="tomaMed" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="tomaMed" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Faz acompanhamento médico?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="acompMedico" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="acompMedico" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>Quais medicamentos? (se sim)</label>
-        <input type="text" id="medicamentos" placeholder="Nome dos medicamentos e dosagem" />
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="field-group">
-      <div class="field">
-        <label>Tem alergia a algum medicamento?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="alergiaMed" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="alergiaMed" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Tem alergia a látex (luvas)?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="alergiaLatex" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="alergiaLatex" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>Qual alergia a medicamento? (se sim)</label>
-        <input type="text" id="alergiaMedDesc" placeholder="Ex: Penicilina, AAS, Dipirona..." />
-      </div>
-      <div class="field span-2">
-        <label>Outras alergias (alimentos, pólen, animais...)</label>
-        <input type="text" id="outrasAlergias" placeholder="Descreva as alergias" />
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="field-group">
-      <div class="field">
-        <label>Nasceu prematuro?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="prematuro" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="prematuro" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Amamentou? Até que idade?</label>
-        <input type="text" id="amamentacao" placeholder="Ex: Sim, até 2 anos" />
-      </div>
-      <div class="field span-2">
-        <label>Observações de saúde importantes</label>
-        <textarea id="obsGeral" placeholder="Cirurgias, hospitalizações, condições especiais..."></textarea>
-      </div>
-    </div>
+    <p style="font-size:14px;color:var(--soft);line-height:1.6;max-width:360px;margin:0 auto;">
+      Sua avaliação é muito importante para nós. Continuaremos trabalhando para oferecer a melhor experiência em saúde bucal para você e sua família.
+    </p>
+    <br>
+    <p style="font-size:13px;color:var(--teal);font-weight:500;">NEOdonto Odontologia · Goiânia, GO</p>
   </div>
-
-  <!-- 4. SAÚDE BUCAL -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-teal">🦷</div>
-      <div>
-        <div class="section-title">Saúde Bucal</div>
-        <div class="section-subtitle">Como estão os dentinhos?</div>
-      </div>
-    </div>
-    <div class="field-group">
-      <div class="field">
-        <label>Já foi ao dentista antes?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="jaDentista" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="jaDentista" value="Sim" /><span>Sim</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Como foi a experiência anterior?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="expAnterior" value="Não se aplica" /><span>N/A</span></label>
-          <label class="radio-pill"><input type="radio" name="expAnterior" value="Ótima" /><span>😊 Ótima</span></label>
-          <label class="radio-pill"><input type="radio" name="expAnterior" value="Regular" /><span>😐 Regular</span></label>
-          <label class="radio-pill"><input type="radio" name="expAnterior" value="Ruim/trauma" /><span>😨 Ruim</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Motivo da consulta hoje</label>
-        <div class="radio-group" style="flex-direction:column;gap:6px;">
-          <label class="radio-pill"><input type="radio" name="motivoConsulta" value="Revisão/prevenção" /><span>🔍 Revisão / prevenção</span></label>
-          <label class="radio-pill"><input type="radio" name="motivoConsulta" value="Dor ou cárie" /><span>🤕 Dor ou cárie</span></label>
-          <label class="radio-pill"><input type="radio" name="motivoConsulta" value="Aparelho ortodôntico" /><span>😁 Aparelho ortodôntico</span></label>
-          <label class="radio-pill"><input type="radio" name="motivoConsulta" value="Extração / dente mole" /><span>🦷 Extração / dente mole</span></label>
-          <label class="radio-pill"><input type="radio" name="motivoConsulta" value="Outro" /><span>📋 Outro</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Hábitos bucais da criança</label>
-        <div class="check-grid" id="habitosBucais">
-          <label class="check-item"><input type="checkbox" value="Chupa dedo" /><span>👍 Chupa dedo</span></label>
-          <label class="check-item"><input type="checkbox" value="Usa chupeta" /><span>🟣 Chupeta</span></label>
-          <label class="check-item"><input type="checkbox" value="Range dentes" /><span>😬 Range dentes</span></label>
-          <label class="check-item"><input type="checkbox" value="Respira pela boca" /><span>💨 Boca aberta</span></label>
-          <label class="check-item"><input type="checkbox" value="Rói unhas" /><span>💅 Rói unhas</span></label>
-          <label class="check-item"><input type="checkbox" value="Morde objetos" /><span>🖊️ Morde objetos</span></label>
-          <label class="check-item"><input type="checkbox" value="Nenhum" /><span>✅ Nenhum</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Com que frequência escova os dentes?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="frequEscova" value="1x ao dia" /><span>1x/dia</span></label>
-          <label class="radio-pill"><input type="radio" name="frequEscova" value="2x ao dia" /><span>2x/dia</span></label>
-          <label class="radio-pill"><input type="radio" name="frequEscova" value="3x ao dia" /><span>3x/dia</span></label>
-          <label class="radio-pill"><input type="radio" name="frequEscova" value="Irregular" /><span>😅 Irregular</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <label>Quem ajuda a escovar?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="ajudaEscova" value="A criança mesma" /><span>👦 Sozinha</span></label>
-          <label class="radio-pill"><input type="radio" name="ajudaEscova" value="Com ajuda dos pais" /><span>👨‍👩 Com pais</span></label>
-          <label class="radio-pill"><input type="radio" name="ajudaEscova" value="Sempre os pais" /><span>👪 Sempre pais</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>Queixa principal / o que incomoda</label>
-        <textarea id="queixaPrincipal" placeholder="Descreva a queixa principal da criança ou dos pais..."></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. ALIMENTAÇÃO -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-orange">🍎</div>
-      <div>
-        <div class="section-title">Alimentação</div>
-        <div class="section-subtitle">Hábitos que afetam os dentes</div>
-      </div>
-    </div>
-    <div class="field-group">
-      <div class="field span-2">
-        <label>Qual a comida FAVORITA da criança? 😋</label>
-        <div class="check-grid" id="comidaFavorita">
-          <label class="check-item"><input type="checkbox" value="Pizza" /><span>🍕 Pizza</span></label>
-          <label class="check-item"><input type="checkbox" value="Macarrão" /><span>🍝 Macarrão</span></label>
-          <label class="check-item"><input type="checkbox" value="Frango" /><span>🍗 Frango</span></label>
-          <label class="check-item"><input type="checkbox" value="Hambúrguer" /><span>🍔 Hambúrguer</span></label>
-          <label class="check-item"><input type="checkbox" value="Frutas" /><span>🍓 Frutas</span></label>
-          <label class="check-item"><input type="checkbox" value="Arroz e feijão" /><span>🍚 Arroz e feijão</span></label>
-          <label class="check-item"><input type="checkbox" value="Sopa" /><span>🍲 Sopa</span></label>
-          <label class="check-item"><input type="checkbox" value="Salada" /><span>🥗 Salada</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>E os DOCES e guloseimas? Consome com que frequência?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="frequDoces" value="Raramente" /><span>😇 Raramente</span></label>
-          <label class="radio-pill"><input type="radio" name="frequDoces" value="Às vezes" /><span>😊 Às vezes</span></label>
-          <label class="radio-pill"><input type="radio" name="frequDoces" value="Todo dia" /><span>😅 Todo dia</span></label>
-          <label class="radio-pill"><input type="radio" name="frequDoces" value="Várias vezes ao dia" /><span>😬 Várias vezes/dia</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>Bebe refrigerante ou sucos artificiais?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="refri" value="Não" /><span>❌ Não</span></label>
-          <label class="radio-pill"><input type="radio" name="refri" value="Raramente" /><span>😊 Raramente</span></label>
-          <label class="radio-pill"><input type="radio" name="refri" value="Às vezes" /><span>😐 Às vezes</span></label>
-          <label class="radio-pill"><input type="radio" name="refri" value="Todo dia" /><span>😬 Todo dia</span></label>
-        </div>
-      </div>
-      <div class="field span-2">
-        <label>Costuma comer na cama ou antes de dormir sem escovar?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="comeNaCama" value="Não" checked /><span>Não</span></label>
-          <label class="radio-pill"><input type="radio" name="comeNaCama" value="Às vezes" /><span>Às vezes</span></label>
-          <label class="radio-pill"><input type="radio" name="comeNaCama" value="Sempre" /><span>Sempre</span></label>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. MUNDO DA CRIANÇA -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-purple">🌈</div>
-      <div>
-        <div class="section-title">O Mundinho da Criança</div>
-        <div class="section-subtitle">Para conhecer melhor o nosso pequeno paciente</div>
-      </div>
-    </div>
-
-    <!-- Brincadeiras favoritas -->
-    <div class="field" style="margin-bottom:18px;">
-      <label>Brincadeira favorita 🎮</label>
-      <div class="emoji-grid" style="margin-top:8px;" id="brincadeiras">
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Videogame" />
-          <span class="emoji-big">🎮</span>
-          <span class="emoji-label">Videogame</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Bonecas" />
-          <span class="emoji-big">🪆</span>
-          <span class="emoji-label">Bonecas</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Futebol" />
-          <span class="emoji-big">⚽</span>
-          <span class="emoji-label">Futebol</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Pular corda" />
-          <span class="emoji-big">🪢</span>
-          <span class="emoji-label">Pular corda</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Desenhar" />
-          <span class="emoji-big">🖍️</span>
-          <span class="emoji-label">Desenhar</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Lego" />
-          <span class="emoji-big">🧱</span>
-          <span class="emoji-label">Lego</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Dançar" />
-          <span class="emoji-big">💃</span>
-          <span class="emoji-label">Dançar</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="brinca" value="Ler / histórias" />
-          <span class="emoji-big">📚</span>
-          <span class="emoji-label">Ler</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Personagem favorito -->
-    <div class="field" style="margin-bottom:18px;">
-      <label>Personagem / desenho favorito 🦸</label>
-      <div class="emoji-grid" style="margin-top:8px;" id="personagens">
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Super-heróis" />
-          <span class="emoji-big">🦸</span>
-          <span class="emoji-label">Super-heróis</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Princesas" />
-          <span class="emoji-big">👸</span>
-          <span class="emoji-label">Princesas</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Dinossauros" />
-          <span class="emoji-big">🦕</span>
-          <span class="emoji-label">Dinossauros</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Unicórnios" />
-          <span class="emoji-big">🦄</span>
-          <span class="emoji-label">Unicórnios</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Carros/corrida" />
-          <span class="emoji-big">🏎️</span>
-          <span class="emoji-label">Carrinho</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Animais" />
-          <span class="emoji-big">🐶</span>
-          <span class="emoji-label">Animais</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Astronautas" />
-          <span class="emoji-big">🚀</span>
-          <span class="emoji-label">Astronautas</span>
-        </label>
-        <label class="emoji-card">
-          <input type="checkbox" name="personagem" value="Outro" />
-          <span class="emoji-big">⭐</span>
-          <span class="emoji-label">Outro</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Cor favorita -->
-    <div class="field" style="margin-bottom:18px;">
-      <label>Cor favorita 🎨</label>
-      <div class="radio-group" style="margin-top:8px; flex-wrap:wrap;">
-        <label class="radio-pill"><input type="radio" name="corFav" value="Azul" /><span>💙 Azul</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Rosa" /><span>🩷 Rosa</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Verde" /><span>💚 Verde</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Amarelo" /><span>💛 Amarelo</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Roxo" /><span>💜 Roxo</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Vermelho" /><span>❤️ Vermelho</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Laranja" /><span>🧡 Laranja</span></label>
-        <label class="radio-pill"><input type="radio" name="corFav" value="Arco-íris" /><span>🌈 Arco-íris</span></label>
-      </div>
-    </div>
-
-    <!-- Animal favorito -->
-    <div class="field">
-      <label>Animal favorito 🐾</label>
-      <input type="text" id="animalFav" placeholder="Ex: Cachorro, gato, leão..." style="margin-top:8px;" />
-    </div>
-  </div>
-
-  <!-- 7. COMO A CRIANÇA SE SENTE -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-pink">😊</div>
-      <div>
-        <div class="section-title">Como a Criança Se Sente</div>
-        <div class="section-subtitle">Ajuda a equipe a cuidar melhor</div>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:20px;">
-      <label>Como a criança está se sentindo HOJE?</label>
-      <div class="emoji-grid" style="grid-template-columns: repeat(5, 1fr); margin-top:10px;">
-        <label class="emoji-card">
-          <input type="radio" name="sentimentoHoje" value="Muito animada" />
-          <span class="emoji-big">🤩</span>
-          <span class="emoji-label">Animada!</span>
-        </label>
-        <label class="emoji-card">
-          <input type="radio" name="sentimentoHoje" value="Normal" />
-          <span class="emoji-big">😊</span>
-          <span class="emoji-label">Normal</span>
-        </label>
-        <label class="emoji-card">
-          <input type="radio" name="sentimentoHoje" value="Um pouco nervosa" />
-          <span class="emoji-big">😬</span>
-          <span class="emoji-label">Nervosa</span>
-        </label>
-        <label class="emoji-card">
-          <input type="radio" name="sentimentoHoje" value="Com medo" />
-          <span class="emoji-big">😨</span>
-          <span class="emoji-label">Com medo</span>
-        </label>
-        <label class="emoji-card">
-          <input type="radio" name="sentimentoHoje" value="Não quer estar aqui" />
-          <span class="emoji-big">😤</span>
-          <span class="emoji-label">Resistente</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:20px;">
-      <label>Como a criança costuma reagir em situações novas?</label>
-      <div class="radio-group" style="margin-top:8px;">
-        <label class="radio-pill"><input type="radio" name="reacaoNova" value="Se adapta fácil" /><span>😎 Se adapta fácil</span></label>
-        <label class="radio-pill"><input type="radio" name="reacaoNova" value="Demora um pouco" /><span>🙂 Demora um pouco</span></label>
-        <label class="radio-pill"><input type="radio" name="reacaoNova" value="Fica muito agitada" /><span>😅 Fica agitada</span></label>
-        <label class="radio-pill"><input type="radio" name="reacaoNova" value="Fica muito quieta" /><span>🤫 Fica quieta</span></label>
-        <label class="radio-pill"><input type="radio" name="reacaoNova" value="Chora muito" /><span>😢 Chora</span></label>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:18px;">
-      <label>O que a equipe pode fazer para deixar a criança mais confortável?</label>
-      <div class="check-grid" style="margin-top:8px;" id="confortoOptions">
-        <label class="check-item"><input type="checkbox" value="Conversar bastante" /><span>💬 Conversar bastante</span></label>
-        <label class="check-item"><input type="checkbox" value="Mostrar os instrumentos antes" /><span>🔍 Mostrar instrumentos</span></label>
-        <label class="check-item"><input type="checkbox" value="Deixar com brinquedo" /><span>🧸 Brinquedo</span></label>
-        <label class="check-item"><input type="checkbox" value="Música / vídeo" /><span>🎵 Música/vídeo</span></label>
-        <label class="check-item"><input type="checkbox" value="Trabalhar devagar" /><span>🐢 Devagar</span></label>
-        <label class="check-item"><input type="checkbox" value="Elogiar bastante" /><span>⭐ Elogiar</span></label>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Alguma observação sobre o comportamento ou necessidades especiais?</label>
-      <textarea id="obsComportamento" placeholder="Ex: A criança tem dificuldade de ficar parada, tem sensibilidade sensorial..." style="margin-top:8px;"></textarea>
-    </div>
-  </div>
-
-  <!-- 8. FOTO DA CRIANÇA -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-green">📸</div>
-      <div>
-        <div class="section-title">Foto da Criança</div>
-        <div class="section-subtitle">Para identificação no prontuário</div>
-      </div>
-    </div>
-    <div class="selfie-area" onclick="document.getElementById('selfieInput').click()">
-      <div class="selfie-icon">📷</div>
-      <p>Toque aqui para tirar ou enviar uma foto</p>
-      <input type="file" id="selfieInput" accept="image/*" capture="user" />
-      <img id="selfiePreview" alt="Foto da criança" />
-    </div>
-    <p class="helper" style="margin-top:8px;">Opcional — ajuda a reconhecer a criança no painel da clínica</p>
-  </div>
-
-  <!-- 9. AVALIAÇÃO FINAL -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-gold">⭐</div>
-      <div>
-        <div class="section-title">Avaliação do Responsável</div>
-        <div class="section-subtitle">Sua opinião é muito importante</div>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:20px;">
-      <label>Como ficou sabendo da NEODONTO?</label>
-      <div class="radio-group" style="margin-top:8px; flex-wrap:wrap;">
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="Indicação de amigo" /><span>👥 Indicação</span></label>
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="Instagram" /><span>📸 Instagram</span></label>
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="Google" /><span>🔍 Google</span></label>
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="WhatsApp" /><span>💬 WhatsApp</span></label>
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="Já era paciente" /><span>🏥 Já paciente</span></label>
-        <label class="radio-pill"><input type="radio" name="comoSoube" value="Outro" /><span>📋 Outro</span></label>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:20px;">
-      <label>Avalie sua expectativa em relação à NEODONTO Kids</label>
-      <div class="star-row" style="margin-top:10px;" id="starRating">
-        <button type="button" class="star-btn" data-val="1">⭐</button>
-        <button type="button" class="star-btn" data-val="2">⭐</button>
-        <button type="button" class="star-btn" data-val="3">⭐</button>
-        <button type="button" class="star-btn" data-val="4">⭐</button>
-        <button type="button" class="star-btn" data-val="5">⭐</button>
-        <span id="starLabel" style="font-size:0.85rem; color:var(--cinza); font-weight:700; margin-left:4px;"></span>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Mensagem para a equipe (opcional)</label>
-      <textarea id="mensagemEquipe" placeholder="Algo que gostaria que a equipe soubesse antes da consulta..."></textarea>
-    </div>
-  </div>
-
-  <!-- SUBMIT -->
-  <button class="btn-submit" id="btnEnviar" type="button" onclick="enviarFicha()">
-    🦷 Enviar Ficha da Criança
-  </button>
 
 </div>
 
-<!-- SUCCESS SCREEN -->
-<div class="container" id="successScreen">
-  <div class="success-emoji">🎉</div>
-  <h2>Ficha enviada com sucesso!</h2>
-  <p>Obrigado! A equipe NEODONTO Kids já recebeu os dados e está ansiosa para receber o(a) pequeno(a)!</p>
-  <div style="font-size:2.5rem; margin-top:8px;">🦷 ⭐ 😊</div>
-</div>
+<!-- Toast de erro -->
+<div class="toast" id="toastErro">❌ Erro ao enviar. Tente novamente.</div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- FIREBASE -->
+<!-- =====================================================
+     FIREBASE SDK (ESM via CDN)
+     ===================================================== -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+                                                  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+  // ─────────────────────────────────────────────────────
+  // 🔧 SUBSTITUA PELOS SEUS DADOS DO FIREBASE CONSOLE
+  // ─────────────────────────────────────────────────────
   const firebaseConfig = {
-    apiKey: "AIzaSyDUJjgEbHToezyzZAMWP5VR1IWHjRF6icM",
-    authDomain: "neodonto-808ea.firebaseapp.com",
-    projectId: "neodonto-808ea",
-    storageBucket: "neodonto-808ea.firebasestorage.app",
-    messagingSenderId: "602833895297",
-    appId: "1:602833895297:web:6744ea4b28739aced43280",
-    measurementId: "G-JNP1JFP6G7"
+    apiKey:            "SUA_API_KEY",
+    authDomain:        "SEU_PROJETO.firebaseapp.com",
+    projectId:         "SEU_PROJETO_ID",
+    storageBucket:     "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId:             "SEU_APP_ID"
   };
+  // ─────────────────────────────────────────────────────
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const db  = getFirestore(app);
 
-  // ---- PROGRESS ----
-  function updateProgress() {
-    const total = 9;
-    let filled = 0;
-    if (document.getElementById('nomeCrianca').value.trim()) filled++;
-    if (document.getElementById('nomeResponsavel').value.trim()) filled++;
-    if (document.getElementById('whatsapp').value.trim()) filled++;
-    if (document.querySelector('input[name="jaDentista"]:checked')) filled++;
-    if (document.querySelector('input[name="sentimentoHoje"]:checked')) filled++;
-    if (document.querySelector('input[name="frequEscova"]:checked')) filled++;
-    if (document.querySelectorAll('#condicoes input:checked').length > 0) filled++;
-    if (document.querySelectorAll('#brincadeiras input:checked').length > 0) filled++;
-    if (document.querySelector('input[name="frequDoces"]:checked')) filled++;
-    const pct = Math.round((filled / total) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
+  // Expõe para o onclick do botão (que está fora do module)
+  window._salvarFeedback = async function(dados) {
+    await addDoc(collection(db, "feedback"), dados);
+  };
+</script>
+
+<!-- =====================================================
+     LÓGICA DO FORMULÁRIO
+     ===================================================== -->
+<script>
+  /* ── Estado das estrelas ── */
+  const starsState = { general: 0, dentista: 0, recepcao: 0 };
+
+  let isAnonimo = false;
+
+  function toggleAnonimo() {
+    isAnonimo = !isAnonimo;
+    const toggle = document.getElementById('anonimoToggle');
+    const badge  = document.getElementById('anonimoBadge');
+    const nome   = document.getElementById('inputNome');
+    const whats  = document.getElementById('inputWhats');
+
+    toggle.classList.toggle('on', isAnonimo);
+    badge.classList.toggle('show', isAnonimo);
+
+    if (isAnonimo) {
+      nome.value  = ''; nome.placeholder  = 'Anônimo';   nome.classList.add('input-anonimo');
+      whats.value = ''; whats.placeholder = 'Ocultado';  whats.classList.add('input-anonimo');
+    } else {
+      nome.placeholder  = 'Seu nome';         nome.classList.remove('input-anonimo');
+      whats.placeholder = '(62) 99999-9999';  whats.classList.remove('input-anonimo');
+    }
   }
 
-  document.addEventListener('input', updateProgress);
-  document.addEventListener('change', updateProgress);
+  const captions = ['','Precisa melhorar 😕','Pode melhorar 🤔','Bom! 😊','Muito bom! 😄','Excelente! Adoramos! ✨'];
 
-  // ---- IDADE AUTO ----
-  document.getElementById('dataNascimento').addEventListener('change', function () {
-    const birth = new Date(this.value);
-    if (!isNaN(birth)) {
-      const hoje = new Date();
-      let anos = hoje.getFullYear() - birth.getFullYear();
-      const m = hoje.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && hoje.getDate() < birth.getDate())) anos--;
-      const meses = ((hoje.getFullYear() - birth.getFullYear()) * 12 + (hoje.getMonth() - birth.getMonth()));
-      document.getElementById('idadeCrianca').value = anos >= 1 ? `${anos} ano${anos !== 1 ? 's' : ''}` : `${meses} meses`;
-    }
-  });
+  function setupStars(groupId, captionId, stateKey) {
+    const stars   = document.querySelectorAll('#' + groupId + ' .star');
+    const caption = document.getElementById(captionId);
 
-  // ---- SELFIE ----
-  document.getElementById('selfieInput').addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = document.getElementById('selfiePreview');
-      img.src = e.target.result;
-      img.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  });
-
-  // ---- EMOJI CARDS click toggle ----
-  document.querySelectorAll('.emoji-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const inp = card.querySelector('input');
-      if (inp.type === 'radio') {
-        document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r => r.closest('.emoji-card').classList.remove('selected'));
-        card.classList.add('selected');
-      } else {
-        card.classList.toggle('selected');
-      }
-    });
-  });
-
-  // Sync emoji card on radio change
-  document.querySelectorAll('.emoji-card input[type="radio"]').forEach(inp => {
-    inp.addEventListener('change', () => {
-      document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r => r.closest('.emoji-card').classList.remove('selected'));
-      inp.closest('.emoji-card').classList.add('selected');
-    });
-  });
-
-  // ---- CHECK ITEMS highlight ----
-  document.querySelectorAll('.check-item input').forEach(inp => {
-    inp.addEventListener('change', () => {
-      inp.closest('.check-item').classList.toggle('checked', inp.checked);
-    });
-  });
-
-  // ---- STAR RATING ----
-  let starValue = 0;
-  const starLabels = ['', 'Ruim 😟', 'Regular 😐', 'Bom 😊', 'Ótimo 😁', 'Excelente 🤩'];
-  document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      starValue = parseInt(btn.dataset.val);
-      document.querySelectorAll('.star-btn').forEach((b, i) => {
-        b.textContent = i < starValue ? '⭐' : '☆';
+    stars.forEach(star => {
+      star.addEventListener('mouseenter', () => {
+        const n = +star.dataset.val;
+        stars.forEach(s => s.querySelector('svg').style.fill = +s.dataset.val <= n ? 'var(--gold)' : '#e5e5e5');
+        caption.textContent = captions[n];
       });
-      document.getElementById('starLabel').textContent = starLabels[starValue] || '';
+      star.addEventListener('mouseleave', () => {
+        const val = starsState[stateKey];
+        stars.forEach(s => s.querySelector('svg').style.fill = +s.dataset.val <= val ? 'var(--gold)' : '#e5e5e5');
+        caption.textContent = val ? captions[val] : 'Clique para avaliar';
+      });
+      star.addEventListener('click', () => {
+        starsState[stateKey] = +star.dataset.val;
+        stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= starsState[stateKey]));
+        caption.textContent = captions[starsState[stateKey]];
+      });
+    });
+  }
+
+  setupStars('starsGeneral',  'captionGeneral',  'general');
+  setupStars('starsDentista', 'captionDentista', 'dentista');
+  setupStars('starsRecepcao', 'captionRecepcao', 'recepcao');
+
+  document.querySelectorAll('.emoji-option').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.emoji-option').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
     });
   });
 
-  // ---- HELPERS ----
-  function getChecked(containerId) {
-    return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(i => i.value);
-  }
+  document.querySelectorAll('.pill').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('selected'));
+  });
 
-  function getCheckedName(name) {
-    return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
-  }
+  document.querySelectorAll('.nps-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
 
-  function getRadio(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : '';
-  }
-
-  function showToast(msg, duration = 3000) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), duration);
-  }
-
-  // ---- SUBMIT ----
-  window.enviarFicha = async function () {
-    const nome = document.getElementById('nomeCrianca').value.trim();
-    const responsavel = document.getElementById('nomeResponsavel').value.trim();
-    const wpp = document.getElementById('whatsapp').value.trim();
-
-    if (!nome || !responsavel || !wpp) {
-      showToast('⚠️ Preencha os campos obrigatórios!');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
+  /* ── Envio ── */
+  async function enviarFeedback() {
     const btn = document.getElementById('btnEnviar');
-    btn.disabled = true;
-    btn.textContent = '⏳ Enviando...';
+    btn.textContent   = 'Enviando...';
+    btn.disabled      = true;
+    btn.style.opacity = '0.7';
 
-    let fotoBase64 = '';
-    const imgEl = document.getElementById('selfiePreview');
-    if (imgEl.src && imgEl.src.startsWith('data:')) fotoBase64 = imgEl.src;
+    // Coleta dados
+    const npsEl    = document.querySelector('.nps-btn.selected');
+    const sensacao = document.querySelector('.emoji-option.selected')?.dataset.val || null;
+    const destaques = [...document.querySelectorAll('.pill.selected')].map(p => p.textContent.trim());
 
     const dados = {
-      tipo: 'infantil',
-      crianca: {
-        nome,
-        dataNascimento: document.getElementById('dataNascimento').value,
-        idade: document.getElementById('idadeCrianca').value,
-        sexo: document.getElementById('sexo').value,
-        escola: document.getElementById('escola').value,
-      },
-      responsavel: {
-        nome: responsavel,
-        parentesco: document.getElementById('parentesco').value,
-        whatsapp: wpp,
-        cpf: document.getElementById('cpf').value,
-        plano: document.getElementById('plano').value,
-      },
-      saudeGeral: {
-        condicoes: getChecked('condicoes'),
-        tomaMedicamento: getRadio('tomaMed'),
-        medicamentos: document.getElementById('medicamentos').value,
-        alergiaMedicamento: getRadio('alergiaMed'),
-        alergiaMedDesc: document.getElementById('alergiaMedDesc').value,
-        alergiaLatex: getRadio('alergiaLatex'),
-        outrasAlergias: document.getElementById('outrasAlergias').value,
-        acompanhamentoMedico: getRadio('acompMedico'),
-        prematuro: getRadio('prematuro'),
-        amamentacao: document.getElementById('amamentacao').value,
-        observacoes: document.getElementById('obsGeral').value,
-      },
-      saudeBucal: {
-        jaDentista: getRadio('jaDentista'),
-        experienciaAnterior: getRadio('expAnterior'),
-        motivoConsulta: getRadio('motivoConsulta'),
-        habitosBucais: getChecked('habitosBucais'),
-        frequenciaEscovacao: getRadio('frequEscova'),
-        ajudaEscovacao: getRadio('ajudaEscova'),
-        queixaPrincipal: document.getElementById('queixaPrincipal').value,
-      },
-      alimentacao: {
-        comidaFavorita: getChecked('comidaFavorita'),
-        frequenciaDoces: getRadio('frequDoces'),
-        refrigerante: getRadio('refri'),
-        comeNaCama: getRadio('comeNaCama'),
-      },
-      mundoCrianca: {
-        brincadeiras: getCheckedName('brinca'),
-        personagens: getCheckedName('personagem'),
-        corFavorita: getRadio('corFav'),
-        animalFavorito: document.getElementById('animalFav').value,
-      },
-      comportamento: {
-        sentimentoHoje: getRadio('sentimentoHoje'),
-        reacaoNova: getRadio('reacaoNova'),
-        confortoOptions: getChecked('confortoOptions'),
-        observacoes: document.getElementById('obsComportamento').value,
-      },
-      avaliacao: {
-        comoSoube: getRadio('comoSoube'),
-        estrelas: starValue,
-        mensagemEquipe: document.getElementById('mensagemEquipe').value,
-      },
-      foto: fotoBase64,
-      criadoEm: serverTimestamp(),
+      nome:               isAnonimo ? 'Anônimo' : (document.getElementById('inputNome').value.trim() || 'Não informado'),
+      whatsapp:           isAnonimo ? '' : document.getElementById('inputWhats').value.trim(),
+      anonimo:            isAnonimo,
+      dentista:           document.getElementById('inputDentista').value,
+      tratamento:         document.getElementById('inputTratamento').value,
+      notaGeral:          starsState.general  || null,
+      notaDentista:       starsState.dentista || null,
+      notaRecepcao:       starsState.recepcao || null,
+      sensacao,
+      destaques,
+      nps:                npsEl !== null ? +npsEl?.dataset.val : null,
+      comentarioPositivo: document.getElementById('comentarioPositivo').value.trim(),
+      comentarioMelhoria: document.getElementById('comentarioMelhoria').value.trim(),
+      autorizaGoogle:     document.getElementById('autorizaGoogle').checked,
+      criadoEm:           new Date().toISOString(), // fallback; serverTimestamp() vem do módulo
     };
 
     try {
-      await addDoc(collection(db, 'anamneses'), dados);
-      document.getElementById('formContainer').style.display = 'none';
-      const success = document.getElementById('successScreen');
-      success.style.display = 'flex';
+      // Chama a função exposta pelo módulo Firebase
+      if (typeof window._salvarFeedback === 'function') {
+        await window._salvarFeedback(dados);
+      } else {
+        throw new Error('Firebase ainda não carregou');
+      }
+      // Sucesso
+      document.getElementById('formMain').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      console.error(err);
-      showToast('❌ Erro ao enviar. Tente novamente.');
-      btn.disabled = false;
-      btn.textContent = '🦷 Enviar Ficha da Criança';
+      console.error('Erro ao salvar feedback:', err);
+      // Reabilita botão
+      btn.textContent   = 'Enviar avaliação ✦';
+      btn.disabled      = false;
+      btn.style.opacity = '1';
+      // Mostra toast de erro
+      const toast = document.getElementById('toastErro');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
     }
-  };
+  }
+
+  // Expõe para o onclick inline do botão
+  window.enviarFeedback  = enviarFeedback;
+  window.toggleAnonimo   = toggleAnonimo;
 </script>
 </body>
 </html>
