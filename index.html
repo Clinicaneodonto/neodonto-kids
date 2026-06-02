@@ -18,6 +18,23 @@
 <meta name="twitter:title" content="Feedback | NEODONTO Odontologia">
 <meta name="twitter:description" content="Como foi sua experiência? Avalie nosso atendimento em Goiânia.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- Firebase SDKs (compat — scripts normais, sem ESM) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey:            "AIzaSyDUJjgEbHToezyzZAMWP5VR1IWHjRF6icM",
+    authDomain:        "neodonto-808ea.firebaseapp.com",
+    projectId:         "neodonto-808ea",
+    storageBucket:     "neodonto-808ea.firebasestorage.app",
+    messagingSenderId: "602833895297",
+    appId:             "1:602833895297:web:6744ea4b28739aced43280",
+    measurementId:     "G-JNP1JFP6G7"
+  });
+  var db = firebase.firestore();
+</script>
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -38,7 +55,6 @@
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
   .page-wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 60px; }
 
-  /* HEADER */
   .header { text-align: center; margin-bottom: 36px; }
   .logo-block { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
   .logo-dots { display: flex; gap: 3px; align-items: flex-end; }
@@ -55,13 +71,11 @@
   .header-sub { font-size: 14px; color: var(--soft); font-weight: 300; max-width: 420px; margin: 0 auto; line-height: 1.6; }
   .divider { width: 48px; height: 3px; background: linear-gradient(90deg, var(--teal), var(--gold)); border-radius: 2px; margin: 16px auto; }
 
-  /* CARD */
   .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
   .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
   .card-title { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: var(--teal); text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
   .card-title-icon { width: 20px; height: 20px; background: var(--teal-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* FIELDS */
   .field { margin-bottom: 18px; }
   .field label { display: block; font-size: 13px; font-weight: 500; color: var(--mid); margin-bottom: 7px; }
   .field input, .field textarea, .field select {
@@ -75,7 +89,6 @@
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media(max-width:480px){ .field-row { grid-template-columns: 1fr; } }
 
-  /* ANÔNIMO */
   .input-anonimo { background: #f2f2f2 !important; color: var(--soft) !important; pointer-events: none; border-color: #e0e0e0 !important; font-style: italic; }
   .anonimo-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 7px 12px; border-radius: 50px; border: 1.5px solid rgba(10,191,188,0.22); background: var(--white); transition: all 0.22s ease; width: fit-content; margin-top: 10px; }
   .anonimo-toggle:hover { border-color: var(--teal); background: var(--teal-glow); }
@@ -88,9 +101,7 @@
   .anonimo-toggle.on .toggle-label { color: var(--teal-dark); }
   .anonimo-badge { display: none; align-items: center; gap: 5px; background: var(--teal-light); border: 1px solid rgba(10,191,188,0.3); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--teal-dark); font-weight: 500; margin-top: 8px; }
   .anonimo-badge.show { display: flex; }
-  .anonimo-badge svg { width: 13px; height: 13px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
 
-  /* STARS */
   .star-section { margin-bottom: 28px; }
   .star-label { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
   .stars { display: flex; gap: 6px; }
@@ -100,7 +111,6 @@
   .star:hover { transform: scale(1.18); }
   .star-caption { font-size: 12px; color: var(--soft); margin-top: 8px; font-style: italic; min-height: 18px; }
 
-  /* EMOJI */
   .emoji-grid { display: flex; gap: 10px; flex-wrap: wrap; }
   .emoji-option { flex: 1; min-width: 80px; cursor: pointer; border: 1.5px solid rgba(10,191,188,0.18); border-radius: 12px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 5px; background: var(--white); transition: all 0.22s ease; }
   .emoji-option:hover { border-color: var(--teal); background: var(--teal-glow); transform: translateY(-2px); }
@@ -108,36 +118,30 @@
   .emoji-option .em { font-size: 28px; line-height: 1; }
   .emoji-option .em-label { font-size: 11px; color: var(--soft); font-weight: 500; text-align: center; }
 
-  /* PILLS */
   .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
   .pill { cursor: pointer; padding: 8px 16px; border-radius: 50px; border: 1.5px solid rgba(10,191,188,0.22); font-size: 13px; color: var(--mid); background: var(--white); transition: all 0.2s ease; user-select: none; }
   .pill:hover { border-color: var(--teal); color: var(--teal-dark); background: var(--teal-glow); }
   .pill.selected { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 500; }
 
-  /* NPS */
   .nps-track { display: flex; gap: 5px; flex-wrap: wrap; }
   .nps-btn { width: 46px; height: 46px; border-radius: 10px; border: 1.5px solid rgba(10,191,188,0.2); background: var(--white); font-size: 14px; font-weight: 500; cursor: pointer; color: var(--mid); transition: all 0.2s ease; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
   .nps-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
   .nps-btn.selected { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
   .nps-labels { display: flex; justify-content: space-between; margin-top: 7px; font-size: 11px; color: var(--soft); }
 
-  /* SUBMIT */
   .submit-btn { display: block; width: 100%; padding: 16px 24px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; transition: all 0.25s ease; box-shadow: 0 6px 20px rgba(10,191,188,0.35); margin-top: 8px; }
   .submit-btn:hover:not(:disabled) { box-shadow: 0 8px 28px rgba(10,191,188,0.45); transform: translateY(-1px); }
-  .submit-btn:active { transform: translateY(0); }
-  .submit-btn:disabled { cursor: not-allowed; }
+  .submit-btn:disabled { cursor: not-allowed; opacity: 0.7; }
 
-  /* SUCCESS */
   .success-screen { display: none; text-align: center; padding: 60px 20px; }
   .success-screen.show { display: block; animation: fadeUp 0.5s ease; }
   .success-circle { width: 80px; height: 80px; background: var(--teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 2px solid var(--teal); }
   .success-circle svg { width: 36px; height: 36px; stroke: var(--teal); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ERROR TOAST */
   .toast { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #c0392b; color: #fff; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999; white-space: nowrap; }
-  .toast.show { display: block; animation: fadeUp 0.3s ease; }
+  .toast.show { display: block; }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px) translateX(-50%); } to { opacity: 1; transform: translateY(0) translateX(-50%); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .form-main { animation: fadeUp 0.4s ease; }
   .footer-note { text-align: center; font-size: 12px; color: var(--soft); margin-top: 28px; line-height: 1.6; }
   .footer-note a { color: var(--teal); text-decoration: none; }
@@ -146,7 +150,6 @@
 <body>
 <div class="page-wrap">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="logo-block">
       <div class="logo-dots"><span></span><span></span><span></span><span></span></div>
@@ -160,20 +163,16 @@
     <p class="header-sub">Sua opinião é essencial para continuarmos oferecendo o melhor cuidado à sua saúde bucal.</p>
   </div>
 
-  <!-- FORM -->
   <div class="form-main" id="formMain">
 
-    <!-- CARD 1: IDENTIFICAÇÃO -->
+    <!-- CARD 1 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
-            <circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
         </div>
         Dados do paciente
       </div>
-
       <div class="field-row">
         <div class="field" style="margin-bottom:0;">
           <label>Nome completo</label>
@@ -184,16 +183,13 @@
           <input type="tel" placeholder="(62) 99999-9999" id="inputWhats">
         </div>
       </div>
-
       <div class="anonimo-toggle" id="anonimoToggle" onclick="toggleAnonimo()">
         <div class="toggle-dot"></div>
         <span class="toggle-label">Responder anonimamente</span>
       </div>
       <div class="anonimo-badge" id="anonimoBadge">
-        <svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3"/><path d="M3 14s0-4 5-4 5 4 5 4"/><line x1="12" y1="3" x2="14" y2="5"/><line x1="14" y1="3" x2="12" y2="5"/></svg>
         Nome e telefone ocultados — obrigado pela sua honestidade!
       </div>
-
       <div class="field" style="margin-top:18px;">
         <label>Dentista que te atendeu</label>
         <select id="inputDentista">
@@ -209,7 +205,6 @@
           <option>Dra. Taynara</option>
         </select>
       </div>
-
       <div class="field" style="margin-bottom:0;">
         <label>Tipo de tratamento realizado</label>
         <select id="inputTratamento">
@@ -228,17 +223,14 @@
       </div>
     </div>
 
-    <!-- CARD 2: AVALIAÇÃO GERAL -->
+    <!-- CARD 2 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="var(--teal)">
-            <path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6z"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="var(--teal)"><path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6z"/></svg>
         </div>
         Avaliação geral
       </div>
-
       <div class="star-section">
         <div class="star-label">Como você avalia sua experiência na clínica?</div>
         <div class="stars" id="starsGeneral">
@@ -250,7 +242,6 @@
         </div>
         <div class="star-caption" id="captionGeneral">Clique para avaliar</div>
       </div>
-
       <div class="star-section">
         <div class="star-label">Como avalia o atendimento do dentista?</div>
         <div class="stars" id="starsDentista">
@@ -262,7 +253,6 @@
         </div>
         <div class="star-caption" id="captionDentista">Clique para avaliar</div>
       </div>
-
       <div class="star-section" style="margin-bottom:0;">
         <div class="star-label">Como avalia o atendimento da recepção?</div>
         <div class="stars" id="starsRecepcao">
@@ -276,16 +266,11 @@
       </div>
     </div>
 
-    <!-- CARD 3: SENSAÇÃO -->
+    <!-- CARD 3 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
-            <circle cx="8" cy="8" r="6"/>
-            <path d="M5 9s1 2 3 2 3-2 3-2"/>
-            <circle cx="6" cy="6.5" r="0.8" fill="var(--teal)"/>
-            <circle cx="10" cy="6.5" r="0.8" fill="var(--teal)"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M5 9s1 2 3 2 3-2 3-2"/><circle cx="6" cy="6.5" r="0.8" fill="var(--teal)"/><circle cx="10" cy="6.5" r="0.8" fill="var(--teal)"/></svg>
         </div>
         Como você se sentiu?
       </div>
@@ -298,13 +283,11 @@
       </div>
     </div>
 
-    <!-- CARD 4: ASPECTOS POSITIVOS -->
+    <!-- CARD 4 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
-            <path d="M2 4h12M2 8h8M2 12h10"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
         </div>
         O que se destacou positivamente?
       </div>
@@ -322,13 +305,11 @@
       </div>
     </div>
 
-    <!-- CARD 5: NPS -->
+    <!-- CARD 5 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
-            <path d="M14 5l-8 8-4-4"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M14 5l-8 8-4-4"/></svg>
         </div>
         Indicação
       </div>
@@ -346,19 +327,14 @@
         <button class="nps-btn" data-val="9">9</button>
         <button class="nps-btn" data-val="10">10</button>
       </div>
-      <div class="nps-labels">
-        <span>Jamais indicaria</span>
-        <span>Com certeza indicaria!</span>
-      </div>
+      <div class="nps-labels"><span>Jamais indicaria</span><span>Com certeza indicaria!</span></div>
     </div>
 
-    <!-- CARD 6: COMENTÁRIOS -->
+    <!-- CARD 6 -->
     <div class="card">
       <div class="card-title">
         <div class="card-title-icon">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round">
-            <path d="M14 2H2a1 1 0 0 0-1 1v9l3-2h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M14 2H2a1 1 0 0 0-1 1v9l3-2h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
         </div>
         Deixe seu comentário
       </div>
@@ -372,7 +348,7 @@
       </div>
     </div>
 
-    <!-- CARD 7: AUTORIZAÇÃO GOOGLE -->
+    <!-- CARD 7 -->
     <div class="card" style="background:var(--teal-light);border-color:rgba(10,191,188,0.3);">
       <div style="display:flex;align-items:flex-start;gap:14px;">
         <input type="checkbox" id="autorizaGoogle" style="width:18px;height:18px;margin-top:2px;accent-color:var(--teal);flex-shrink:0;cursor:pointer;">
@@ -392,7 +368,6 @@
     </p>
   </div>
 
-  <!-- TELA DE SUCESSO -->
   <div class="success-screen" id="successScreen">
     <div class="success-circle">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -408,88 +383,47 @@
 
 </div>
 
-<!-- Toast de erro -->
 <div class="toast" id="toastErro">❌ Erro ao enviar. Tente novamente.</div>
 
-<!-- =====================================================
-     FIREBASE SDK (ESM via CDN)
-     ===================================================== -->
-<script type="module">
-  import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp }
-                                                  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  // ─────────────────────────────────────────────────────
-  // 🔧 SUBSTITUA PELOS SEUS DADOS DO FIREBASE CONSOLE
-  // ─────────────────────────────────────────────────────
-  const firebaseConfig = {
-  apiKey: "AIzaSyDUJjgEbHToezyzZAMWP5VR1IWHjRF6icM",
-  authDomain: "neodonto-808ea.firebaseapp.com",
-  projectId: "neodonto-808ea",
-  storageBucket: "neodonto-808ea.firebasestorage.app",
-  messagingSenderId: "602833895297",
-  appId: "1:602833895297:web:6744ea4b28739aced43280",
-  measurementId: "G-JNP1JFP6G7"
-  };
-  // ─────────────────────────────────────────────────────
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  // Expõe para o onclick do botão (que está fora do module)
-  window._salvarFeedback = async function(dados) {
-    await addDoc(collection(db, "feedback"), dados);
-  };
-</script>
-
-<!-- =====================================================
-     LÓGICA DO FORMULÁRIO
-     ===================================================== -->
 <script>
-  /* ── Estado das estrelas ── */
-  const starsState = { general: 0, dentista: 0, recepcao: 0 };
-
-  let isAnonimo = false;
+  var isAnonimo = false;
+  var starsState = { general: 0, dentista: 0, recepcao: 0 };
+  var captions = ['','Precisa melhorar 😕','Pode melhorar 🤔','Bom! 😊','Muito bom! 😄','Excelente! Adoramos! ✨'];
 
   function toggleAnonimo() {
     isAnonimo = !isAnonimo;
-    const toggle = document.getElementById('anonimoToggle');
-    const badge  = document.getElementById('anonimoBadge');
-    const nome   = document.getElementById('inputNome');
-    const whats  = document.getElementById('inputWhats');
-
+    var toggle = document.getElementById('anonimoToggle');
+    var badge  = document.getElementById('anonimoBadge');
+    var nome   = document.getElementById('inputNome');
+    var whats  = document.getElementById('inputWhats');
     toggle.classList.toggle('on', isAnonimo);
     badge.classList.toggle('show', isAnonimo);
-
     if (isAnonimo) {
-      nome.value  = ''; nome.placeholder  = 'Anônimo';   nome.classList.add('input-anonimo');
-      whats.value = ''; whats.placeholder = 'Ocultado';  whats.classList.add('input-anonimo');
+      nome.value = ''; nome.placeholder = 'Anônimo'; nome.classList.add('input-anonimo');
+      whats.value = ''; whats.placeholder = 'Ocultado'; whats.classList.add('input-anonimo');
     } else {
-      nome.placeholder  = 'Seu nome';         nome.classList.remove('input-anonimo');
-      whats.placeholder = '(62) 99999-9999';  whats.classList.remove('input-anonimo');
+      nome.placeholder = 'Seu nome'; nome.classList.remove('input-anonimo');
+      whats.placeholder = '(62) 99999-9999'; whats.classList.remove('input-anonimo');
     }
   }
 
-  const captions = ['','Precisa melhorar 😕','Pode melhorar 🤔','Bom! 😊','Muito bom! 😄','Excelente! Adoramos! ✨'];
-
   function setupStars(groupId, captionId, stateKey) {
-    const stars   = document.querySelectorAll('#' + groupId + ' .star');
-    const caption = document.getElementById(captionId);
-
-    stars.forEach(star => {
-      star.addEventListener('mouseenter', () => {
-        const n = +star.dataset.val;
-        stars.forEach(s => s.querySelector('svg').style.fill = +s.dataset.val <= n ? 'var(--gold)' : '#e5e5e5');
+    var stars   = document.querySelectorAll('#' + groupId + ' .star');
+    var caption = document.getElementById(captionId);
+    stars.forEach(function(star) {
+      star.addEventListener('mouseenter', function() {
+        var n = +star.dataset.val;
+        stars.forEach(function(s) { s.querySelector('svg').style.fill = +s.dataset.val <= n ? 'var(--gold)' : '#e5e5e5'; });
         caption.textContent = captions[n];
       });
-      star.addEventListener('mouseleave', () => {
-        const val = starsState[stateKey];
-        stars.forEach(s => s.querySelector('svg').style.fill = +s.dataset.val <= val ? 'var(--gold)' : '#e5e5e5');
+      star.addEventListener('mouseleave', function() {
+        var val = starsState[stateKey];
+        stars.forEach(function(s) { s.querySelector('svg').style.fill = +s.dataset.val <= val ? 'var(--gold)' : '#e5e5e5'; });
         caption.textContent = val ? captions[val] : 'Clique para avaliar';
       });
-      star.addEventListener('click', () => {
+      star.addEventListener('click', function() {
         starsState[stateKey] = +star.dataset.val;
-        stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= starsState[stateKey]));
+        stars.forEach(function(s) { s.classList.toggle('active', +s.dataset.val <= starsState[stateKey]); });
         caption.textContent = captions[starsState[stateKey]];
       });
     });
@@ -499,37 +433,42 @@
   setupStars('starsDentista', 'captionDentista', 'dentista');
   setupStars('starsRecepcao', 'captionRecepcao', 'recepcao');
 
-  document.querySelectorAll('.emoji-option').forEach(el => {
-    el.addEventListener('click', () => {
-      document.querySelectorAll('.emoji-option').forEach(e => e.classList.remove('selected'));
+  document.querySelectorAll('.emoji-option').forEach(function(el) {
+    el.addEventListener('click', function() {
+      document.querySelectorAll('.emoji-option').forEach(function(e) { e.classList.remove('selected'); });
       el.classList.add('selected');
     });
   });
 
-  document.querySelectorAll('.pill').forEach(el => {
-    el.addEventListener('click', () => el.classList.toggle('selected'));
+  document.querySelectorAll('.pill').forEach(function(el) {
+    el.addEventListener('click', function() { el.classList.toggle('selected'); });
   });
 
-  document.querySelectorAll('.nps-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.nps-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.nps-btn').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
     });
   });
 
-  /* ── Envio ── */
-  async function enviarFeedback() {
-    const btn = document.getElementById('btnEnviar');
-    btn.textContent   = 'Enviando...';
-    btn.disabled      = true;
-    btn.style.opacity = '0.7';
+  function mostrarToast(msg) {
+    var toast = document.getElementById('toastErro');
+    toast.textContent = msg || '❌ Erro ao enviar. Tente novamente.';
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 4000);
+  }
 
-    // Coleta dados
-    const npsEl    = document.querySelector('.nps-btn.selected');
-    const sensacao = document.querySelector('.emoji-option.selected')?.dataset.val || null;
-    const destaques = [...document.querySelectorAll('.pill.selected')].map(p => p.textContent.trim());
+  function enviarFeedback() {
+    var btn = document.getElementById('btnEnviar');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
 
-    const dados = {
+    var npsEl    = document.querySelector('.nps-btn.selected');
+    var sensacao = document.querySelector('.emoji-option.selected');
+    var destaques = [];
+    document.querySelectorAll('.pill.selected').forEach(function(p) { destaques.push(p.textContent.trim()); });
+
+    var dados = {
       nome:               isAnonimo ? 'Anônimo' : (document.getElementById('inputNome').value.trim() || 'Não informado'),
       whatsapp:           isAnonimo ? '' : document.getElementById('inputWhats').value.trim(),
       anonimo:            isAnonimo,
@@ -538,42 +477,28 @@
       notaGeral:          starsState.general  || null,
       notaDentista:       starsState.dentista || null,
       notaRecepcao:       starsState.recepcao || null,
-      sensacao,
-      destaques,
-      nps:                npsEl !== null ? +npsEl?.dataset.val : null,
+      sensacao:           sensacao ? sensacao.dataset.val : null,
+      destaques:          destaques,
+      nps:                npsEl ? parseInt(npsEl.dataset.val) : null,
       comentarioPositivo: document.getElementById('comentarioPositivo').value.trim(),
       comentarioMelhoria: document.getElementById('comentarioMelhoria').value.trim(),
       autorizaGoogle:     document.getElementById('autorizaGoogle').checked,
-      criadoEm:           new Date().toISOString(), // fallback; serverTimestamp() vem do módulo
+      criadoEm:           firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    try {
-      // Chama a função exposta pelo módulo Firebase
-      if (typeof window._salvarFeedback === 'function') {
-        await window._salvarFeedback(dados);
-      } else {
-        throw new Error('Firebase ainda não carregou');
-      }
-      // Sucesso
-      document.getElementById('formMain').style.display = 'none';
-      document.getElementById('successScreen').classList.add('show');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (err) {
-      console.error('Erro ao salvar feedback:', err);
-      // Reabilita botão
-      btn.textContent   = 'Enviar avaliação ✦';
-      btn.disabled      = false;
-      btn.style.opacity = '1';
-      // Mostra toast de erro
-      const toast = document.getElementById('toastErro');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 4000);
-    }
+    db.collection('feedback').add(dados)
+      .then(function() {
+        document.getElementById('formMain').style.display = 'none';
+        document.getElementById('successScreen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function(err) {
+        console.error('Erro Firestore:', err);
+        btn.textContent = 'Enviar avaliação ✦';
+        btn.disabled = false;
+        mostrarToast('❌ Erro: ' + err.message);
+      });
   }
-
-  // Expõe para o onclick inline do botão
-  window.enviarFeedback  = enviarFeedback;
-  window.toggleAnonimo   = toggleAnonimo;
 </script>
 </body>
 </html>
